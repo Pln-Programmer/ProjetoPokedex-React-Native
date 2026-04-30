@@ -1,17 +1,59 @@
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import styles from "./style";
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
 
+import * as WebBrowser from "expo-web-browser";
+import { useOAuth } from "@clerk/clerk-expo";
+
+import Botao from "../../assets/components/Button";
 import PokeBola from "../../assets/img/jogo.png";
 
-export default function Login() {
+WebBrowser.maybeCompleteAuthSession();
 
-    const navigator = useNavigation()
+export default function Login() {
+  const navigator = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const googleOAuth = useOAuth({ strategy: "oauth_google" });
+
+  async function onGoogleSignIn() {
+    try {
+      setIsLoading(true);
+
+      const oAuthFlow = await googleOAuth.startOAuthFlow();
+
+      if (oAuthFlow?.authSessionResult?.type === "success") {
+        if (oAuthFlow.setActive && oAuthFlow.createdSessionId) {
+          await oAuthFlow.setActive({
+            session: oAuthFlow.createdSessionId,
+          });
+        }
+      }
+    } catch (error) {
+      console.log("Erro no login Google:", error);
+      setIsLoading(false);
+  }
+}
+
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
+
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        
         <View style={styles.header}>
           <Image source={PokeBola} style={styles.image} />
           <Text style={styles.logo}>Pokedéx</Text>
@@ -41,20 +83,27 @@ export default function Login() {
               />
             </View>
 
-          </View>
-
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Logar</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.switchText}>
-            Não tem conta? 
-            <TouchableOpacity onPress={() => navigator.navigate("Cadastro")}>
-                <Text style={styles.link}> Clique Aqui</Text>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Logar</Text>
             </TouchableOpacity>
-          </Text>
-        </View>
 
+            <Botao
+              title="Entrar com Google"
+              onPress={onGoogleSignIn}
+              isLoading={isLoading}
+            />
+
+            <Text style={styles.switchText}>
+              Não tem conta?{" "}
+              <Text
+                style={styles.link}
+                onPress={() => navigator.navigate("Cadastro" as never)}
+              >
+                Clique Aqui
+              </Text>
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );

@@ -1,10 +1,7 @@
-import { NavigationContainer } from '@react-navigation/native';
 import StackRoutes from './stack.routes';
 
-export default function Routes() {
-    return (
-        <NavigationContainer>
-            <StackRoutes />
-        </NavigationContainer>
-    )
+export default function Routes({ isSignedIn }) {
+  return <StackRoutes isSignedIn={isSignedIn} />;
+
+  
 }
