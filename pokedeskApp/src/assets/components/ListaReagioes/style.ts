@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         padding: 12,
        borderRadius: 10,
-       marginTop: 10
     },
 
     texto: {
