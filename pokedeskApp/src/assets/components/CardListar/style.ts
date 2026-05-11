@@ -65,15 +65,8 @@ export default StyleSheet.create({
 
   badgeText: {
     color: "#fff",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
   },
 
-  grass: {
-    backgroundColor: "#78C850",
-  },
-
-  poison: {
-    backgroundColor: "#A040A0",
-  },
 });

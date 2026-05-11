@@ -1,7 +1,13 @@
-import { View, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Text,
+} from "react-native";
 import styles from "./style";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import Header from "../../../assets/components/Header";
 import { Feather } from "@expo/vector-icons";
@@ -10,9 +16,34 @@ import Lista from "../../../assets/components/ListaReagioes";
 
 export default function ListarTodos() {
   const navigator = useNavigation();
+  const scrollRef = useRef<ScrollView>(null);
 
   const [pokemons, setPokemons] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // 🔥 UNOVA RANGE
+  const MIN = 493;
+  const MAX = 649;
+
+  const [offset, setOffset] = useState(MIN);
+
+  function Diminuir() {
+    setOffset((prev) => Math.max(MIN, prev - 30));
+
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+  }
+
+  function Somar() {
+    setOffset((prev) => Math.min(MAX, prev + 30));
+
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+  }
 
   useEffect(() => {
     async function fetchPokemons() {
@@ -20,7 +51,7 @@ export default function ListarTodos() {
         setLoading(true);
 
         const res = await fetch(
-          `https://pokeapi.co/api/v2/pokemon?limit=649&offset=493`
+          `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=30`
         );
 
         const data = await res.json();
@@ -48,7 +79,10 @@ export default function ListarTodos() {
     }
 
     fetchPokemons();
-  }, []);
+  }, [offset]);
+
+  const canGoBack = offset > MIN;
+  const canGoNext = offset + 30 <= MAX;
 
   return (
     <>
@@ -58,36 +92,102 @@ export default function ListarTodos() {
           voltar={<Feather name="arrow-left" size={30} color="#FFF" />}
         />
       </View>
-      
-      <ScrollView>
-        <View style={styles.Lista}>
-            <TouchableOpacity onPress={() => navigator.navigate("Kanto" as never)}><Lista regiao="Kanto" cor="rgba(46, 125, 50, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Johto" as never)}><Lista regiao="Johto" cor="rgba(166, 124, 0, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Hoenn" as never)}><Lista regiao="Hoenn" cor="rgba(21, 101, 192, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Sinnoh" as never)}><Lista regiao="Sinnoh" cor="rgba(40, 53, 147, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Unova" as never)}><Lista regiao="Unova" cor="rgba(66, 66, 66, 1)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Kalos" as never)}><Lista regiao="Kalos" cor="rgba(173, 20, 87, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Alola" as never)}><Lista regiao="Alola" cor="rgba(239, 108, 0, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Galar" as never)}><Lista regiao="Galar" cor="rgba(183, 28, 28, 0.50)" /></TouchableOpacity>
-            <TouchableOpacity onPress={() => navigator.navigate("Paldea" as never)}><Lista regiao="Paldea" cor="rgba(106, 27, 154, 0.50)" /></TouchableOpacity>
-          </View>
-        <View style={styles.container}>
 
-          {loading && <ActivityIndicator size="large" color="#FFF" />}
+      <ScrollView ref={scrollRef}>
+        <View style={styles.Lista}>
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Kanto" as never)}
+          >
+            <Lista regiao="Kanto" cor="rgba(46, 125, 50, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Johto" as never)}
+          >
+            <Lista regiao="Johto" cor="rgba(166, 124, 0, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Hoenn" as never)}
+          >
+            <Lista regiao="Hoenn" cor="rgba(21, 101, 192, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Sinnoh" as never)}
+          >
+            <Lista regiao="Sinnoh" cor="rgba(40, 53, 147, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Unova" as never)}
+          >
+            <Lista regiao="Unova" cor="rgba(66, 66, 66, 1)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Kalos" as never)}
+          >
+            <Lista regiao="Kalos" cor="rgba(173, 20, 87, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Alola" as never)}
+          >
+            <Lista regiao="Alola" cor="rgba(239, 108, 0, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Galar" as never)}
+          >
+            <Lista regiao="Galar" cor="rgba(183, 28, 28, 0.50)" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Paldea" as never)}
+          >
+            <Lista regiao="Paldea" cor="rgba(106, 27, 154, 0.50)" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.container}>
+          {loading && <ActivityIndicator size="large" color="#000" />}
 
           {pokemons.map((pokemon) => (
             <Card
               key={pokemon.id}
-              nome={pokemon.name}
+              id={pokemon.id}
+              nome={
+                pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+              }
               numero={`#${pokemon.id.toString().padStart(4, "0")}`}
               imagem={{ uri: pokemon.image }}
-              tipo1={pokemon.types[0]}
-              tipo2={pokemon.types[1]}
+              tipo1={
+                pokemon.types[0].charAt(0).toUpperCase() +
+                pokemon.types[0].slice(1)
+              }
+              tipo2={
+                pokemon.types[1]
+                  ? pokemon.types[1].charAt(0).toUpperCase() +
+                    pokemon.types[1].slice(1)
+                  : null
+              }
             />
           ))}
+        </View>
 
+        <View style={styles.Botoes}>
+          {canGoBack && (
+            <TouchableOpacity onPress={Diminuir} style={styles.botaoDiminuir}>
+              <Text style={styles.textoBotao}>⬅ Mostrar anterior</Text>
+            </TouchableOpacity>
+          )}
 
-
+          {canGoNext && (
+            <TouchableOpacity onPress={Somar} style={styles.botaoSomar}>
+              <Text style={styles.textoBotao}>Mostrar mais ➜</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </>

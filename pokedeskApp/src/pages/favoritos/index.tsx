@@ -1,12 +1,7 @@
-import {
-  View,
-  ScrollView,
-  ActivityIndicator,
-  Text,
-} from "react-native";
+import { View, ScrollView, ActivityIndicator, Text } from "react-native";
 
 import styles from "./style";
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 
 import Header from "../../assets/components/Header";
 import { Feather } from "@expo/vector-icons";
@@ -14,13 +9,17 @@ import Card from "../../assets/components/CardListar";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { useFocusEffect } from "@react-navigation/native";
+
 export default function Favoritos() {
   const [pokemons, setPokemons] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    carregarFavoritos();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      carregarFavoritos();
+    }, [])
+  );
 
   async function carregarFavoritos() {
     try {
@@ -28,9 +27,7 @@ export default function Favoritos() {
 
       const favoritosSalvos = await AsyncStorage.getItem("@favoritos");
 
-      const favoritos = favoritosSalvos
-        ? JSON.parse(favoritosSalvos)
-        : [];
+      const favoritos = favoritosSalvos ? JSON.parse(favoritosSalvos) : [];
 
       if (favoritos.length === 0) {
         setPokemons([]);
@@ -39,9 +36,7 @@ export default function Favoritos() {
 
       const detailedPokemons = await Promise.all(
         favoritos.map(async (id: number) => {
-          const res = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${id}`
-          );
+          const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 
           const details = await res.json();
 
@@ -73,12 +68,15 @@ export default function Favoritos() {
 
       <ScrollView>
         <View style={styles.container}>
-          {loading && (
-            <ActivityIndicator size="large" color="#FFF" />
-          )}
+          {loading && <ActivityIndicator size="large" color="#FFF" />}
 
           {!loading && pokemons.length === 0 && (
-            <Text style={{ color: "#000", fontSize: 18 }}>
+            <Text
+              style={{
+                color: "#000",
+                fontSize: 18,
+              }}
+            >
               Nenhum Pokémon favoritado
             </Text>
           )}
@@ -86,13 +84,22 @@ export default function Favoritos() {
           {pokemons.map((pokemon) => (
             <Card
               key={pokemon.id}
-              nome={pokemon.name}
-              numero={`#${pokemon.id
-                .toString()
-                .padStart(4, "0")}`}
+              id={pokemon.id}
+              nome={
+                pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+              }
+              numero={`#${pokemon.id.toString().padStart(4, "0")}`}
               imagem={{ uri: pokemon.image }}
-              tipo1={pokemon.types[0]}
-              tipo2={pokemon.types[1]}
+              tipo1={
+                pokemon.types[0].charAt(0).toUpperCase() +
+                pokemon.types[0].slice(1)
+              }
+              tipo2={
+                pokemon.types[1]
+                  ? pokemon.types[1].charAt(0).toUpperCase() +
+                    pokemon.types[1].slice(1)
+                  : null
+              }
             />
           ))}
         </View>
