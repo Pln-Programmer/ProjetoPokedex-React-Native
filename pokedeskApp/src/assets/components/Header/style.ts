@@ -1,35 +1,42 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     width: "100%",
     height: 70,
-    backgroundColor: "#1E1E1E",
-
-    flexDirection: "row",
+    backgroundColor: "#000",
+    
+    justifyContent: "center",
     alignItems: "center",
 
-    borderBottomWidth: 2,
-    borderBottomColor: "#333",
-    paddingHorizontal: 15,
-  },
-
-  lado: {
-    width: 60,
-  },
-
-  centro: {
-    flex: 1,
-    alignItems: "center",
+    position: "relative",
   },
 
   titulo: {
-    color: "#FFF",
-    fontSize: 22,
+    color: "#fff",
+    fontSize: 24,
     fontWeight: "bold",
-    letterSpacing: 1,
   },
 
-});
+  botaoEsquerda: {
+    position: "absolute",
+    left: 15,
 
-export default styles;
+    height: "100%",
+    justifyContent: "center",
+  },
+
+  botaoDireita: {
+    position: "absolute",
+    right: 15,
+
+    backgroundColor: "#fff",
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+
+  sair: {
+    fontWeight: "bold",
+  },
+});

@@ -1,0 +1,406 @@
+import React, { useEffect, useState } from "react";
+
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
+
+import { useRoute, useNavigation } from "@react-navigation/native";
+
+import { Feather } from "@expo/vector-icons";
+
+import { Audio } from "expo-av";
+
+import OndasSonoras from "../../assets/img/ondas.png";
+
+import styles from "./style";
+
+const TYPE_COLORS: any = {
+  Grass: "#78C850",
+  Fire: "#F08030",
+  Water: "#6890F0",
+  Bug: "#A8B820",
+  Normal: "#A8A878",
+  Poison: "#A040A0",
+  Electric: "#F8D030",
+  Ground: "#E0C068",
+  Fairy: "#EE99AC",
+  Fighting: "#C03028",
+  Psychic: "#F85888",
+  Rock: "#B8A038",
+  Ghost: "#705898",
+  Ice: "#98D8D8",
+  Dragon: "#7038F8",
+  Dark: "#705848",
+  Steel: "#B8B8D0",
+  Flying: "#A890F0",
+};
+
+export default function PokemonDetail() {
+  const route = useRoute();
+
+  const navigation = useNavigation();
+
+  const { pokemonId } = route.params as {
+    pokemonId: number;
+  };
+
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchPokemon() {
+      try {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+        );
+
+        const json = await response.json();
+
+        setData(json);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchPokemon();
+  }, [pokemonId]);
+
+  async function reproduzirSom(url: string) {
+    try {
+      if (!url) {
+        return;
+      }
+
+      const { sound } = await Audio.Sound.createAsync({
+        uri: url,
+      });
+
+      await sound.playAsync();
+    } catch (error) {
+      console.log("Erro ao reproduzir som:", error);
+    }
+  }
+
+  if (!data) {
+    return (
+      <View style={styles.containerLoading}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
+
+  const mainType =
+    data.types[0].type.name.charAt(0).toUpperCase() +
+    data.types[0].type.name.slice(1);
+
+  const mainColor = TYPE_COLORS[mainType] || "#777";
+
+  const somClassico =
+    data.cries?.legacy;
+
+  const somAtual =
+    data.cries?.latest;
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: mainColor,
+        },
+      ]}
+    >
+      <StatusBar barStyle="light-content" />
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.cabecalho}>
+          <TouchableOpacity
+            style={styles.botaoVoltar}
+            onPress={() => navigation.goBack()}
+          >
+            <Feather name="arrow-left" size={28} color="#FFF" />
+          </TouchableOpacity>
+
+          <View>
+            <Text style={styles.nomePokemon}>
+              {data.name.charAt(0).toUpperCase() +
+                data.name.slice(1)}
+            </Text>
+
+            <Text style={styles.numeroPokemon}>
+              #{data.id.toString().padStart(3, "0")}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.containerImagem}>
+          <Image
+            source={{
+              uri:
+                data.sprites.other["official-artwork"]
+                  .front_default,
+            }}
+            style={styles.imagemPokemon}
+          />
+        </View>
+
+        <View style={styles.folhaBranca}>
+          <View style={styles.containerTipos}>
+            {data.types.map((item: any) => {
+              const typeName =
+                item.type.name.charAt(0).toUpperCase() +
+                item.type.name.slice(1);
+
+              return (
+                <View
+                  key={item.type.name}
+                  style={[
+                    styles.tipoBadge,
+                    {
+                      backgroundColor:
+                        TYPE_COLORS[typeName] || "#777",
+                    },
+                  ]}
+                >
+                  <Text style={styles.tipoTexto}>
+                    {typeName}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+
+          <Text
+            style={[
+              styles.tituloSecao,
+              {
+                color: mainColor,
+              },
+            ]}
+          >
+            About
+          </Text>
+
+          <View style={styles.containerSobre}>
+            <View style={styles.itemSobre}>
+              <Text style={styles.valorSobre}>
+                ⚖️ {data.weight / 10} kg
+              </Text>
+
+              <Text style={styles.labelSobre}>
+                Peso
+              </Text>
+            </View>
+
+            <View style={styles.divisor} />
+
+            <View style={styles.itemSobre}>
+              <Text style={styles.valorSobre}>
+                📏 {data.height / 10} m
+              </Text>
+
+              <Text style={styles.labelSobre}>
+                Altura
+              </Text>
+            </View>
+
+            <View style={styles.divisor} />
+
+            <View style={styles.itemSobre}>
+              <Text style={styles.valorSobre}>
+                {data.moves[0]?.move.name
+                  .replace("-", " ")
+                  .toUpperCase()}
+              </Text>
+
+              <Text style={styles.labelSobre}>
+                Move
+              </Text>
+            </View>
+          </View>
+
+          <Text
+            style={[
+              styles.tituloSecao,
+              {
+                color: mainColor,
+              },
+            ]}
+          >
+            Base Stats
+          </Text>
+
+          <View style={styles.containerStats}>
+            <View style={styles.labelsStats}>
+              {data.stats.map((s: any) => (
+                <Text
+                  key={s.stat.name}
+                  style={[
+                    styles.textoLabelStat,
+                    {
+                      color: mainColor,
+                    },
+                  ]}
+                >
+                  {s.stat.name
+                    .replace(
+                      "special-attack",
+                      "Sp. Atk"
+                    )
+                    .replace(
+                      "special-defense",
+                      "Sp. Def"
+                    )
+                    .replace("-", " ")}
+                </Text>
+              ))}
+            </View>
+
+            <View style={styles.divisorVertical} />
+
+            <View style={styles.valoresStats}>
+              {data.stats.map((s: any) => (
+                <Text
+                  key={s.stat.name}
+                  style={styles.textoValorStat}
+                >
+                  {s.base_stat
+                    .toString()
+                    .padStart(3, "0")}
+                </Text>
+              ))}
+            </View>
+
+            <View style={styles.containerProgresso}>
+              {data.stats.map((s: any) => (
+                <View
+                  key={s.stat.name}
+                  style={styles.fundoProgresso}
+                >
+                  <View
+                    style={[
+                      styles.barraProgresso,
+                      {
+                        width: `${
+                          (s.base_stat / 200) * 100
+                        }%`,
+                        backgroundColor: mainColor,
+                      },
+                    ]}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.audios}>
+            <TouchableOpacity
+              style={[
+                styles.botaoAudio,
+                {
+                  borderColor: mainColor,
+                },
+              ]}
+              onPress={() =>
+                reproduzirSom(somClassico)
+              }
+            >
+              <View
+                style={[
+                  styles.containerIconeAudio,
+                  {
+                    backgroundColor: mainColor,
+                    shadowColor: mainColor,
+                  },
+                ]}
+              >
+                <Feather
+                  name="volume-2"
+                  size={34}
+                  color="#fff"
+                />
+              </View>
+
+              <View style={styles.infoAudio}>
+                <Text style={styles.audioTitulo}>
+                  Rugido clássico
+                </Text>
+
+                <Text
+                  style={[
+                    styles.audioSubtitulo,
+                    {
+                      color: mainColor,
+                    },
+                  ]}
+                >
+                  Toque para ouvir
+                </Text>
+              </View>
+
+              <Image
+                source={OndasSonoras}
+                style={styles.audioOndas}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.botaoAudio,
+                {
+                  borderColor: mainColor,
+                },
+              ]}
+              onPress={() =>
+                reproduzirSom(somAtual)
+              }
+            >
+              <View
+                style={[
+                  styles.containerIconeAudio,
+                  {
+                    backgroundColor: mainColor,
+                    shadowColor: mainColor,
+                  },
+                ]}
+              >
+                <Feather
+                  name="volume-2"
+                  size={34}
+                  color="#fff"
+                />
+              </View>
+
+              <View style={styles.infoAudio}>
+                <Text style={styles.audioTitulo}>
+                  Rugido atual
+                </Text>
+
+                <Text
+                  style={[
+                    styles.audioSubtitulo,
+                    {
+                      color: mainColor,
+                    },
+                  ]}
+                >
+                  Toque para ouvir
+                </Text>
+              </View>
+
+              <Image
+                source={OndasSonoras}
+                style={styles.audioOndas}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+}

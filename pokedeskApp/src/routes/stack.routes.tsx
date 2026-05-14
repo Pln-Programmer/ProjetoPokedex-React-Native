@@ -6,6 +6,7 @@ import Home from "../pages/home";
 import ListarTodos from "../pages/listarTodos";
 import Login from "../pages/login";
 import Pesquisa from "../pages/pesquisar";
+import Informacoes from "../pages/informacoes";
 
 import Kanto from "../pages/listarTodos/Kanto";
 import Johto from "../pages/listarTodos/Johto";
@@ -21,13 +22,34 @@ const Stack = createNativeStackNavigator();
 
 export default function StackRoutes({ isSignedIn }) {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       {isSignedIn ? (
         <>
           <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Favorito" component={Favorito} />
-          <Stack.Screen name="ListarTodos" component={ListarTodos} />
-          <Stack.Screen name="Pesquisa" component={Pesquisa} />
+
+          <Stack.Screen
+            name="Favorito"
+            component={Favorito}
+          />
+
+          <Stack.Screen
+            name="ListarTodos"
+            component={ListarTodos}
+          />
+
+          <Stack.Screen
+            name="Pesquisa"
+            component={Pesquisa}
+          />
+
+          <Stack.Screen
+            name="Informacoes"
+            component={Informacoes}
+          />
 
           <Stack.Screen name="Kanto" component={Kanto} />
           <Stack.Screen name="Johto" component={Johto} />
@@ -42,7 +64,11 @@ export default function StackRoutes({ isSignedIn }) {
       ) : (
         <>
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Cadastro" component={Cadastro} />
+
+          <Stack.Screen
+            name="Cadastro"
+            component={Cadastro}
+          />
         </>
       )}
     </Stack.Navigator>

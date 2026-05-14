@@ -9,16 +9,21 @@ import {
 } from "react-native";
 import styles from "./style";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 import Header from "../../assets/components/Header";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 
 export default function Pesquisa() {
+
+  const navigator = useNavigation();
+
   const [pokemon, setPokemon] = useState("");
   const [resultado, setResultado] = useState(null);
 
   async function buscarPokemon() {
+
     if (!pokemon.trim()) {
       Alert.alert("Atenção", "Digite o nome ou número do Pokémon!");
       return;
@@ -82,7 +87,17 @@ export default function Pesquisa() {
         </TouchableOpacity>
 
         {resultado && (
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() =>
+              navigator.navigate(
+                "Informacoes" as never,
+                {
+                  pokemonId: resultado.id,
+                } as never
+              )
+            }
+          >
             <Image
               source={{
                 uri: resultado.sprites.other["official-artwork"].front_default,
@@ -94,14 +109,16 @@ export default function Pesquisa() {
               <Text style={styles.numero}>{formatarNumero(resultado.id)}</Text>
 
               <Text style={styles.nome}>{resultado.name.toUpperCase()}</Text>
-              
+
               <View style={styles.tiposContainer}>
                 {resultado.types.map((tipo, index) => (
                   <View
                     key={index}
                     style={[
                       styles.tipo,
-                      { backgroundColor: coresTipos[tipo.type.name] },
+                      {
+                        backgroundColor: coresTipos[tipo.type.name],
+                      },
                     ]}
                   >
                     <Text style={styles.tipoTexto}>
@@ -111,7 +128,7 @@ export default function Pesquisa() {
                 ))}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
 
         <StatusBar style="light" />

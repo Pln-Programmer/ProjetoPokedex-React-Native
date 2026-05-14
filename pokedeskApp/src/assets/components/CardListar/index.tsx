@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import styles from "./style";
+import { useNavigation } from "@react-navigation/native";
 
 import { useEffect, useState } from "react";
 
@@ -37,9 +38,12 @@ export default function CardListar({
   tipo1,
   tipo2,
 }: any) {
+
+  const navigator = useNavigation();
+
   const [favorito, setFavorito] = useState(false);
 
-  const idPokemon = Number(numero.replace("#", ""));
+  const idPokemon = id;
 
   useEffect(() => {
     verificarFavorito();
@@ -93,7 +97,16 @@ export default function CardListar({
         />
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigator.navigate(
+            "Informacoes" as never,
+            {
+              pokemonId: id,
+            } as never
+          )
+        }
+      >
         <View style={styles.imageContainer}>
           <Image source={imagem} style={styles.image} />
         </View>

@@ -7,11 +7,12 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+
 import styles from "./style";
 import { useNavigation } from "@react-navigation/native";
 
 import * as WebBrowser from "expo-web-browser";
-import { useOAuth } from "@clerk/clerk-expo";
+import { useOAuth, useAuth } from "@clerk/clerk-expo";
 
 import Botao from "../../assets/components/Button";
 import PokeBola from "../../assets/img/jogo.png";
@@ -20,9 +21,14 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
   const navigator = useNavigation();
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const googleOAuth = useOAuth({ strategy: "oauth_google" });
+  const googleOAuth = useOAuth({
+    strategy: "oauth_google",
+  });
+
+  const { isSignedIn } = useAuth();
 
   async function onGoogleSignIn() {
     try {
@@ -30,18 +36,21 @@ export default function Login() {
 
       const oAuthFlow = await googleOAuth.startOAuthFlow();
 
-      if (oAuthFlow?.authSessionResult?.type === "success") {
+      if (oAuthFlow.authSessionResult?.type === "success") {
         if (oAuthFlow.setActive && oAuthFlow.createdSessionId) {
           await oAuthFlow.setActive({
             session: oAuthFlow.createdSessionId,
           });
+
+          navigator.navigate("Home" as never);
         }
       }
     } catch (error) {
       console.log("Erro no login Google:", error);
+    } finally {
       setIsLoading(false);
+    }
   }
-}
 
   useEffect(() => {
     WebBrowser.warmUpAsync();
@@ -66,6 +75,7 @@ export default function Login() {
           <View style={styles.form}>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Email</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="Digite seu email"
@@ -75,6 +85,7 @@ export default function Login() {
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Senha</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="Digite sua senha"
@@ -97,7 +108,9 @@ export default function Login() {
               Não tem conta?{" "}
               <Text
                 style={styles.link}
-                onPress={() => navigator.navigate("Cadastro" as never)}
+                onPress={() =>
+                  navigator.navigate("Cadastro" as never)
+                }
               >
                 Clique Aqui
               </Text>

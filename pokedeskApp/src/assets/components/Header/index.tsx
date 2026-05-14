@@ -1,28 +1,41 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  TouchableOpacityProps,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
+
 import styles from "./style";
 import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
+
+import { useAuth } from "@clerk/clerk-expo";
 
 export default function Header({ titulo, voltar }) {
+  const navigator = useNavigation();
 
-      const navigator = useNavigation();
+  const { signOut } = useAuth();
+
+  async function handleLogout() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log("Erro ao sair:", error);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.lado} onPress={() => navigator.navigate("Home" as never)}>{voltar}</TouchableOpacity>
+      <TouchableOpacity
+        style={styles.botaoEsquerda}
+        onPress={() => navigator.goBack()}
+      >
+        {voltar}
+      </TouchableOpacity>
 
-      <View style={styles.centro}>
-        <Text style={styles.titulo}>{titulo}</Text>
-      </View>
+      <Text style={styles.titulo}>{titulo}</Text>
 
-      <View style={styles.lado} />
+      <TouchableOpacity
+        style={styles.botaoDireita}
+        onPress={handleLogout}
+      >
+        <Text style={styles.sair}>SAIR</Text>
+      </TouchableOpacity>
     </View>
   );
 }
