@@ -3,48 +3,48 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#0B1020",
   },
 
   scroll: {
     flexGrow: 1,
     justifyContent: "center",
-    padding: 20,
+    padding: 24,
   },
 
   header: {
     alignItems: "center",
-    marginBottom: 25,
+    marginBottom: 30,
   },
 
   image: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
+    width: 250,
+    height: 170,
+    resizeMode: "contain",
   },
 
-  logo: {
-    fontSize: 24,
+  card: {
+    backgroundColor: "#11182D",
+
+    borderRadius: 24,
+    padding: 22,
+
+    borderWidth: 1,
+    borderColor: "rgba(0,191,255,0.15)",
+  },
+
+  title: {
+    fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
   },
 
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    padding: 20,
-    gap: 15,
-  },
-
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#333",
-  },
-
   subtitle: {
     fontSize: 14,
-    color: "#666",
+    color: "#8FA3C7",
+
+    marginTop: 4,
+    marginBottom: 14,
   },
 
   form: {
@@ -52,29 +52,38 @@ const styles = StyleSheet.create({
   },
 
   inputGroup: {
-    gap: 5,
+    gap: 6,
   },
 
   label: {
     fontSize: 13,
-    color: "#444",
+    color: "#B8C7E0",
+    fontWeight: "600",
   },
 
   input: {
+    backgroundColor: "#1A2440",
+
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
-    padding: 12,
-    fontSize: 14,
-    backgroundColor: "#F9F9F9",
+    borderColor: "#243251",
+
+    borderRadius: 14,
+
+    padding: 14,
+
+    color: "#fff",
+    fontSize: 15,
   },
 
   button: {
-    backgroundColor: "#000",
-    padding: 14,
-    borderRadius: 12,
+    backgroundColor: "#00BFFF",
+
+    padding: 15,
+    borderRadius: 14,
+
     alignItems: "center",
-    marginTop: 10,
+
+    marginTop: 18,
   },
 
   buttonText: {
@@ -85,36 +94,13 @@ const styles = StyleSheet.create({
 
   switchText: {
     textAlign: "center",
-    marginTop: 10,
-    color: "#666",
+    marginTop: 12,
+    color: "#8FA3C7",
   },
 
   link: {
-    color: "#007AFF",
-    fontWeight: "bold",
-  },
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-
-  googleIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-
-  googleText: {
-    fontSize: 16,
-    color: "#333",
-    fontWeight: "bold",
+    color: "#00BFFF",
+    fontWeight: "bold"
   },
 });
 

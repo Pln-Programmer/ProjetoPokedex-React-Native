@@ -1,15 +1,23 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    header: {
-        marginBottom: 25
-    },
+  header: {
+    backgroundColor: "#0B1020",
+  },
 
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        gap: 25
-    }
-})
+  container: {
+    flex: 1,
 
-export default styles
+    backgroundColor: "#0B1020",
+
+    alignItems: "center",
+
+    gap: 20,
+
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 30,
+  },
+});
+
+export default styles;

@@ -96,7 +96,11 @@ export default function ListarTodos() {
         />
       </View>
 
-      <ScrollView ref={scrollRef}>
+      <ScrollView
+        ref={scrollRef}
+        style={{ backgroundColor: "#0B1020" }}
+        contentContainerStyle={{ paddingBottom: 30 }}
+      >
         <View style={styles.Lista}>
           <TouchableOpacity
             onPress={() => navigator.navigate("Kanto" as never)}

@@ -17,26 +17,20 @@ export default function Home() {
     <>
     <ScrollView>
       <View style={styles.header}>
-      {/* <Header titulo="Pokedex" voltar={<Feather
-            name="arrow-left"
-            size={30}
-            color="#FFF"
-            style={styles.icon}
-          />}/> */}
-          <Header titulo="Pokedex"/>
+          <Header titulo="PokeVision"/>
       </View>
       <View style={styles.container}>
         <View style={styles.containerCards}>
         <TouchableOpacity style={styles.card} onPress={() => navigator.navigate("Pesquisa" as never)}> 
-          <Card imagem={Lupa} titulo="Pesquisa" cor="#000B5B" />
+          <Card imagem={Lupa} titulo="Pesquisa" cor="#1261A0" />
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.card} onPress={() => navigator.navigate("ListarTodos" as never)}> 
-          <Card imagem={Pokebola} titulo="Lista" cor="#720000" />
+          <Card imagem={Pokebola} titulo="Lista" cor="#A61B1B" />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card} onPress={() => navigator.navigate("Favorito" as never)}> 
-          <Card imagem={Estrela} titulo="Favoritos" cor="#887300" />
+          <Card imagem={Estrela} titulo="Favoritos" cor="#D4A900" />
         </TouchableOpacity>
         </View>
       </View>

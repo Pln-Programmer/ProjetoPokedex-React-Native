@@ -1,81 +1,98 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-Lista: {
-  flexDirection: "row",
-  flexWrap: "wrap",
-  justifyContent: "center",
-  backgroundColor: "rgba(239, 108, 0, 0.30)",
-  padding: 10,
-  borderBottomEndRadius: 15,
-  gap: 10,
-  shadowColor: "#000",
-  shadowOffset: {
-    width: 0,
-    height: 4,
+  header: {
+    backgroundColor: "#0B1020",
   },
-  shadowOpacity: 0.25,
-  shadowRadius: 4,
-  elevation: 5,
-},
 
-  container: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 10
+  Lista: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+
+    backgroundColor: "#11182D",
+
+    padding: 14,
+
+    gap: 10,
+
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0,191,255,0.10)",
   },
+
+container: {
+  alignItems: "center",
+
+  backgroundColor: "#0B1020",
+
+  paddingVertical: 14,
+
+  flexGrow: 1,
+},
 
   Botoes: {
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  paddingHorizontal: 15,
-  marginBottom: 25,
-  gap: 10,
-},
+    flexDirection: "row",
 
-botaoSomar: {
-  flex: 1,
-  backgroundColor: "#42A5F5",
-  paddingVertical: 14,
-  borderRadius: 15,
-  alignItems: "center",
-  justifyContent: "center",
+    justifyContent: "space-between",
+    alignItems: "center",
 
-  shadowColor: "#000",
-  shadowOffset: {
-    width: 0,
-    height: 4,
+    paddingHorizontal: 20,
+    paddingBottom: 35,
+    paddingTop: 10,
+
+    gap: 10,
+
+    backgroundColor: "#0B1020",
   },
-  shadowOpacity: 0.25,
-  shadowRadius: 4,
-  elevation: 5,
-},
 
-botaoDiminuir: {
-  flex: 1,
-  backgroundColor: "#FF5252",
-  paddingVertical: 14,
-  borderRadius: 15,
-  alignItems: "center",
-  justifyContent: "center",
+  botaoSomar: {
+    flex: 1,
 
-  shadowColor: "#000",
-  shadowOffset: {
-    width: 0,
-    height: 4,
+    backgroundColor: "#00BFFF",
+
+    paddingVertical: 14,
+
+    borderRadius: 16,
+
+    alignItems: "center",
+    justifyContent: "center",
+
+    shadowColor: "#00BFFF",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+
+    elevation: 5,
   },
-  shadowOpacity: 0.25,
-  shadowRadius: 4,
-  elevation: 5,
-},
 
-textoBotao: {
-  color: "#FFF",
-  fontSize: 15,
-  fontWeight: "bold",
-  letterSpacing: 0.5,
-},
-})
+  botaoDiminuir: {
+    flex: 1,
 
-export default styles
+    backgroundColor: "#1A2440",
+
+    borderWidth: 1,
+    borderColor: "rgba(0,191,255,0.15)",
+
+    paddingVertical: 14,
+
+    borderRadius: 16,
+
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  textoBotao: {
+    color: "#FFFFFF",
+
+    fontSize: 15,
+    fontWeight: "bold",
+
+    letterSpacing: 0.3,
+  },
+});
+
+export default styles;

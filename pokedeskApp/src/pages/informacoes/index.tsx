@@ -50,6 +50,7 @@ export default function PokemonDetail() {
     pokemonId: number;
   };
 
+  const [showHeaderBar, setShowHeaderBar] = useState(false);
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
@@ -100,11 +101,9 @@ export default function PokemonDetail() {
 
   const mainColor = TYPE_COLORS[mainType] || "#777";
 
-  const somClassico =
-    data.cries?.legacy;
+  const somClassico = data.cries?.legacy;
 
-  const somAtual =
-    data.cries?.latest;
+  const somAtual = data.cries?.latest;
 
   return (
     <View
@@ -117,7 +116,41 @@ export default function PokemonDetail() {
     >
       <StatusBar barStyle="light-content" />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      {showHeaderBar && (
+        <View
+          style={[
+            styles.headerFixa,
+            {
+              backgroundColor: mainColor,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            style={styles.botaoVoltar}
+            onPress={() => navigation.goBack()}
+          >
+            <Feather name="arrow-left" size={28} color="#FFF" />
+          </TouchableOpacity>
+
+          <Text style={styles.nomeHeaderFixa}>
+            {data.name.charAt(0).toUpperCase() + data.name.slice(1)}
+          </Text>
+        </View>
+      )}
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          const scrollY = event.nativeEvent.contentOffset.y;
+
+          if (scrollY > 80) {
+            setShowHeaderBar(true);
+          } else {
+            setShowHeaderBar(false);
+          }
+        }}
+        scrollEventThrottle={16}
+      >
         <View style={styles.cabecalho}>
           <TouchableOpacity
             style={styles.botaoVoltar}
@@ -128,8 +161,7 @@ export default function PokemonDetail() {
 
           <View>
             <Text style={styles.nomePokemon}>
-              {data.name.charAt(0).toUpperCase() +
-                data.name.slice(1)}
+              {data.name.charAt(0).toUpperCase() + data.name.slice(1)}
             </Text>
 
             <Text style={styles.numeroPokemon}>
@@ -141,9 +173,7 @@ export default function PokemonDetail() {
         <View style={styles.containerImagem}>
           <Image
             source={{
-              uri:
-                data.sprites.other["official-artwork"]
-                  .front_default,
+              uri: data.sprites.other["official-artwork"].front_default,
             }}
             style={styles.imagemPokemon}
           />
@@ -162,14 +192,11 @@ export default function PokemonDetail() {
                   style={[
                     styles.tipoBadge,
                     {
-                      backgroundColor:
-                        TYPE_COLORS[typeName] || "#777",
+                      backgroundColor: TYPE_COLORS[typeName] || "#777",
                     },
                   ]}
                 >
-                  <Text style={styles.tipoTexto}>
-                    {typeName}
-                  </Text>
+                  <Text style={styles.tipoTexto}>{typeName}</Text>
                 </View>
               );
             })}
@@ -188,39 +215,27 @@ export default function PokemonDetail() {
 
           <View style={styles.containerSobre}>
             <View style={styles.itemSobre}>
-              <Text style={styles.valorSobre}>
-                ⚖️ {data.weight / 10} kg
-              </Text>
+              <Text style={styles.valorSobre}>⚖️ {data.weight / 10} kg</Text>
 
-              <Text style={styles.labelSobre}>
-                Peso
-              </Text>
+              <Text style={styles.labelSobre}>Peso</Text>
+            </View>
+
+            <View style={styles.divisor} />
+
+            <View style={styles.itemSobre}>
+              <Text style={styles.valorSobre}>📏 {data.height / 10} m</Text>
+
+              <Text style={styles.labelSobre}>Altura</Text>
             </View>
 
             <View style={styles.divisor} />
 
             <View style={styles.itemSobre}>
               <Text style={styles.valorSobre}>
-                📏 {data.height / 10} m
+                {data.moves[0]?.move.name.replace("-", " ").toUpperCase()}
               </Text>
 
-              <Text style={styles.labelSobre}>
-                Altura
-              </Text>
-            </View>
-
-            <View style={styles.divisor} />
-
-            <View style={styles.itemSobre}>
-              <Text style={styles.valorSobre}>
-                {data.moves[0]?.move.name
-                  .replace("-", " ")
-                  .toUpperCase()}
-              </Text>
-
-              <Text style={styles.labelSobre}>
-                Move
-              </Text>
+              <Text style={styles.labelSobre}>Move</Text>
             </View>
           </View>
 
@@ -248,14 +263,8 @@ export default function PokemonDetail() {
                   ]}
                 >
                   {s.stat.name
-                    .replace(
-                      "special-attack",
-                      "Sp. Atk"
-                    )
-                    .replace(
-                      "special-defense",
-                      "Sp. Def"
-                    )
+                    .replace("special-attack", "Sp. Atk")
+                    .replace("special-defense", "Sp. Def")
                     .replace("-", " ")}
                 </Text>
               ))}
@@ -265,30 +274,20 @@ export default function PokemonDetail() {
 
             <View style={styles.valoresStats}>
               {data.stats.map((s: any) => (
-                <Text
-                  key={s.stat.name}
-                  style={styles.textoValorStat}
-                >
-                  {s.base_stat
-                    .toString()
-                    .padStart(3, "0")}
+                <Text key={s.stat.name} style={styles.textoValorStat}>
+                  {s.base_stat.toString().padStart(3, "0")}
                 </Text>
               ))}
             </View>
 
             <View style={styles.containerProgresso}>
               {data.stats.map((s: any) => (
-                <View
-                  key={s.stat.name}
-                  style={styles.fundoProgresso}
-                >
+                <View key={s.stat.name} style={styles.fundoProgresso}>
                   <View
                     style={[
                       styles.barraProgresso,
                       {
-                        width: `${
-                          (s.base_stat / 200) * 100
-                        }%`,
+                        width: `${(s.base_stat / 200) * 100}%`,
                         backgroundColor: mainColor,
                       },
                     ]}
@@ -306,9 +305,7 @@ export default function PokemonDetail() {
                   borderColor: mainColor,
                 },
               ]}
-              onPress={() =>
-                reproduzirSom(somClassico)
-              }
+              onPress={() => reproduzirSom(somClassico)}
             >
               <View
                 style={[
@@ -319,17 +316,11 @@ export default function PokemonDetail() {
                   },
                 ]}
               >
-                <Feather
-                  name="volume-2"
-                  size={34}
-                  color="#fff"
-                />
+                <Feather name="volume-2" size={34} color="#fff" />
               </View>
 
               <View style={styles.infoAudio}>
-                <Text style={styles.audioTitulo}>
-                  Rugido clássico
-                </Text>
+                <Text style={styles.audioTitulo}>Rugido clássico</Text>
 
                 <Text
                   style={[
@@ -343,10 +334,7 @@ export default function PokemonDetail() {
                 </Text>
               </View>
 
-              <Image
-                source={OndasSonoras}
-                style={styles.audioOndas}
-              />
+              <Image source={OndasSonoras} style={styles.audioOndas} />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -356,9 +344,7 @@ export default function PokemonDetail() {
                   borderColor: mainColor,
                 },
               ]}
-              onPress={() =>
-                reproduzirSom(somAtual)
-              }
+              onPress={() => reproduzirSom(somAtual)}
             >
               <View
                 style={[
@@ -369,17 +355,11 @@ export default function PokemonDetail() {
                   },
                 ]}
               >
-                <Feather
-                  name="volume-2"
-                  size={34}
-                  color="#fff"
-                />
+                <Feather name="volume-2" size={34} color="#fff" />
               </View>
 
               <View style={styles.infoAudio}>
-                <Text style={styles.audioTitulo}>
-                  Rugido atual
-                </Text>
+                <Text style={styles.audioTitulo}>Rugido atual</Text>
 
                 <Text
                   style={[
@@ -393,10 +373,7 @@ export default function PokemonDetail() {
                 </Text>
               </View>
 
-              <Image
-                source={OndasSonoras}
-                style={styles.audioOndas}
-              />
+              <Image source={OndasSonoras} style={styles.audioOndas} />
             </TouchableOpacity>
           </View>
         </View>

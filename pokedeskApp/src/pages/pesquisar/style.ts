@@ -4,30 +4,41 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#0B1020",
   },
 
   input: {
     width: "100%",
-    height: 50,
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    color: "#0F172A",
+    height: 55,
+
+    borderRadius: 16,
+
+    paddingHorizontal: 18,
+
+    fontSize: 15,
+
+    color: "#FFFFFF",
+
     borderWidth: 1,
-    borderColor: "#CBD5E1",
+    borderColor: "#243251",
+
     marginBottom: 15,
-    backgroundColor: "#F8FAFC",
+
+    backgroundColor: "#11182D",
   },
 
   botao: {
     width: "100%",
-    height: 50,
-    backgroundColor: "#3B82F6",
-    borderRadius: 12,
+    height: 55,
+
+    backgroundColor: "#00BFFF",
+
+    borderRadius: 16,
+
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+
+    marginBottom: 24,
   },
 
   botaoTexto: {
@@ -38,18 +49,38 @@ const styles = StyleSheet.create({
 
   card: {
     flexDirection: "row",
-    backgroundColor: "#F1F5F9",
-    padding: 15,
-    borderRadius: 16,
+
+    backgroundColor: "#11182D",
+
+    padding: 18,
+
+    borderRadius: 24,
+
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    alignItems: "stretch",
+    borderColor: "rgba(0,191,255,0.12)",
+
+    alignItems: "center",
+
     gap: 15,
+
+    shadowColor: "#00BFFF",
+
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+
+    elevation: 5,
   },
 
   imagem: {
-    width: 110,
-    height: 110,
+    width: 120,
+    height: 120,
+
+    resizeMode: "contain",
   },
 
   info: {
@@ -58,37 +89,43 @@ const styles = StyleSheet.create({
   },
 
   numero: {
-    fontSize: 14,
-    color: "#94A3B8",
+    fontSize: 13,
+    color: "#8FA3C7",
     fontWeight: "bold",
   },
 
   nome: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#0F172A",
-    marginBottom: 10
+    color: "#FFFFFF",
+
+    marginVertical: 6,
+
+    letterSpacing: 0.5,
   },
 
   tiposContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
     gap: 8,
+    marginTop: 8,
   },
 
   tipo: {
     width: "100%",
+
     paddingVertical: 8,
+
     borderRadius: 10,
+
     alignItems: "center",
   },
 
   tipoTexto: {
     color: "#FFF",
     fontWeight: "bold",
-    fontSize: 13,
-  },
+    fontSize: 12,
 
+    letterSpacing: 0.5,
+  },
 });
 
 export default styles;

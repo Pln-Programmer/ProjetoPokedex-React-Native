@@ -65,7 +65,6 @@ export default function Login() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
           <Image source={PokeBola} style={styles.image} />
-          <Text style={styles.logo}>Pokedéx</Text>
         </View>
 
         <View style={styles.card}>

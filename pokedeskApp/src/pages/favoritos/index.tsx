@@ -66,14 +66,17 @@ export default function Favoritos() {
         />
       </View>
 
-      <ScrollView>
+      <ScrollView
+        style={{ backgroundColor: "#0B1020" }}
+        contentContainerStyle={{ paddingBottom: 30 }}
+      >
         <View style={styles.container}>
           {loading && <ActivityIndicator size="large" color="#FFF" />}
 
           {!loading && pokemons.length === 0 && (
             <Text
               style={{
-                color: "#000",
+                color: "#FFFFFF",
                 fontSize: 18,
               }}
             >

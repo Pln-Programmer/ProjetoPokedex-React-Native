@@ -2,25 +2,49 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 16,
+    borderRadius: 24,
+
     alignItems: "center",
     justifyContent: "center",
-    padding: 30,
-    gap: 5
+
+    paddingVertical: 30,
+    paddingHorizontal: 60,
+
+    gap: 10,
+
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
+
+    shadowColor: "#00BFFF",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+
+    elevation: 5,
   },
 
   imagem: {
-    width: 280,
-    height: 200,
+    width: 200,
+    height: 190,
+
     resizeMode: "contain",
-    marginBottom: 20,
+
+    marginBottom: 8,
   },
 
   titulo: {
-    color: "#fff",
+    color: "#FFFFFF",
+
     fontSize: 30,
     fontWeight: "bold",
+
     textAlign: "center",
+
+    letterSpacing: 0.5,
   },
 });
 

@@ -61,7 +61,6 @@ useEffect(() => {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
           <Image source={PokeBola} style={styles.image} />
-          <Text style={styles.logo}>Pokedéx</Text>
         </View>
 
         <View style={styles.card}>
@@ -108,7 +107,7 @@ useEffect(() => {
           <Text style={styles.switchText}>
             Já tem conta?
             <TouchableOpacity onPress={() => navigator.navigate("Login")}>
-              <Text style={styles.link}>Clique Aqui</Text>
+              <Text style={styles.link}> Clique Aqui</Text>
             </TouchableOpacity>
           </Text>
         </View>

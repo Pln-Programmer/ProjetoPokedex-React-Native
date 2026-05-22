@@ -11,13 +11,11 @@ import {
 import styles from "./style";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function CardSelecaoPokemon({ imagem, titulo, cor }) {
+export default function CardSelecao({ imagem, titulo, cor }) {
   return (
-    <>
     <View style={[styles.container, { backgroundColor: cor }]}>
       <Image source={imagem} style={styles.imagem} />
       <Text style={styles.titulo}>{titulo}</Text>
     </View>
-    </>
   );
 }
