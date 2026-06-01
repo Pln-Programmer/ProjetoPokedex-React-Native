@@ -153,8 +153,6 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
 
-    marginBottom: 38,
-
     backgroundColor: "#0B1020",
 
     borderRadius: 24,
@@ -171,6 +169,22 @@ export const styles = StyleSheet.create({
 
     alignItems: "center",
   },
+
+habilidade: {
+  width: '45%',
+  padding: 10,
+
+  backgroundColor: "#0B1020",
+
+  alignItems: "center",
+
+  alignSelf: "center",
+
+borderBottomLeftRadius: 16,
+borderBottomRightRadius: 16,
+
+  marginBottom: 30,
+},
 
   valorSobre: {
     fontSize: 15,
@@ -194,6 +208,15 @@ export const styles = StyleSheet.create({
   divisor: {
     width: 1,
     height: 50,
+
+    backgroundColor: "rgba(255,255,255,0.08)",
+  },
+
+    divisorTop: {
+    width: 90,
+    height: 1,
+    marginTop: -12,
+    marginBottom: 12,
 
     backgroundColor: "rgba(255,255,255,0.08)",
   },
@@ -410,6 +433,124 @@ export const styles = StyleSheet.create({
     letterSpacing: 0.5,
     pointerEvents: "none",
   },
+  avisoShiny: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: 'rgb(76, 76, 76)',
+    textAlign: "center",
+    marginTop: -35,
+    marginBottom: 20,
+  },
+
+containerEvolucoes: {
+  marginTop: 35,
+
+  backgroundColor: "#0B1020",
+
+  borderRadius: 28,
+
+  padding: 18,
+
+  borderWidth: 1,
+
+  borderColor: "rgba(255,255,255,0.05)",
+},
+
+cardEvolucao: {
+  width: "100%",
+
+  backgroundColor: "#11182D",
+
+  borderRadius: 28,
+
+  alignItems: "center",
+
+  paddingVertical: 22,
+
+  borderWidth: 1,
+
+  borderColor: "rgba(255,255,255,0.08)",
+
+  shadowColor: "#000",
+
+  shadowOffset: {
+    width: 0,
+    height: 4,
+  },
+
+  shadowOpacity: 0.25,
+
+  shadowRadius: 8,
+
+  elevation: 8,
+},
+
+imagemEvolucao: {
+  width: 140,
+  height: 140,
+
+  resizeMode: "contain",
+},
+
+nomeEvolucao: {
+  color: "#FFF",
+
+  fontSize: 22,
+
+  fontWeight: "bold",
+
+  marginTop: 10,
+
+  textTransform: "capitalize",
+},
+
+idEvolucao: {
+  color: "#8FA3C7",
+
+  marginTop: 4,
+
+  fontSize: 14,
+
+  fontWeight: "600",
+},
+
+containerMetodo: {
+  alignItems: "center",
+
+  marginVertical: 18,
+},
+
+linhaEvolucao: {
+  width: 2,
+
+  height: 28,
+
+  backgroundColor: "rgba(255,255,255,0.15)",
+},
+
+metodoEvolucao: {
+  marginTop: 8,
+
+  backgroundColor: "#11182D",
+
+  paddingHorizontal: 18,
+
+  paddingVertical: 8,
+
+  borderRadius: 999,
+
+  fontSize: 12,
+
+  fontWeight: "bold",
+
+  letterSpacing: 1,
+
+  textTransform: "uppercase",
+
+  borderWidth: 1,
+
+  borderColor: "rgba(255,255,255,0.08)",
+},
 });
 
 export default styles;
