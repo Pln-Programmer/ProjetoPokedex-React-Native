@@ -8,19 +8,28 @@ import {
   ScrollView,
 } from "react-native";
 
-import styles from "./style";
+import { createStyles } from "./style";
 import { useNavigation } from "@react-navigation/native";
 
 import * as WebBrowser from "expo-web-browser";
 import { useOAuth, useAuth } from "@clerk/clerk-expo";
 
+import { useTheme } from "../../context/ThemeContext";
+import { Feather } from "@expo/vector-icons";
+
 import Botao from "../../assets/components/Button";
-import PokeBola from "../../assets/img/jogo.png";
+
+import PokeVisionDark from "../../assets/img/jogo.png";
+import PokeVisionLight from "../../assets/img/jogoLight.png";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
   const navigator = useNavigation();
+
+const { colors, isDark, toggleTheme } = useTheme();
+
+  const styles = createStyles(colors);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,12 +73,18 @@ export default function Login() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
-          <Image source={PokeBola} style={styles.image} />
+          <Image
+            source={isDark ? PokeVisionLight : PokeVisionDark}
+            style={styles.image}
+          />
         </View>
 
         <View style={styles.card}>
           <Text style={styles.title}>Login</Text>
-          <Text style={styles.subtitle}>Preencha os dados abaixo</Text>
+
+          <Text style={styles.subtitle}>
+            Preencha os dados abaixo
+          </Text>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
@@ -78,7 +93,7 @@ export default function Login() {
               <TextInput
                 style={styles.input}
                 placeholder="Digite seu email"
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.secondaryText}
               />
             </View>
 
@@ -89,7 +104,7 @@ export default function Login() {
                 style={styles.input}
                 placeholder="Digite sua senha"
                 secureTextEntry
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.secondaryText}
               />
             </View>
 
@@ -117,6 +132,21 @@ export default function Login() {
           </View>
         </View>
       </ScrollView>
+      <TouchableOpacity
+  style={[
+    styles.trocaTemaButton,
+    {
+      backgroundColor: isDark ? "#FFFFFF" : "#000000",
+    },
+  ]}
+  onPress={toggleTheme}
+>
+  <Feather
+    name={isDark ? "sun" : "moon"}
+    size={24}
+    color={isDark ? "#000000" : "#FFFFFF"}
+  />
+</TouchableOpacity>
     </View>
   );
 }

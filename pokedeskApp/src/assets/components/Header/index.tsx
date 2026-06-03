@@ -1,15 +1,20 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
-import styles from "./style";
-import { useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
+import { createStyles } from "./style";
 
+import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "@clerk/clerk-expo";
+
+import { useTheme } from "../../../context/ThemeContext";
 
 export default function Header({ titulo, voltar }) {
   const navigator = useNavigation();
 
   const { signOut } = useAuth();
+
+  const { colors } = useTheme();
+
+  const styles = createStyles(colors);
 
   async function handleLogout() {
     try {

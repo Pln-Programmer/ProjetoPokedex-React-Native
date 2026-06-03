@@ -5,18 +5,24 @@ import {
   ActivityIndicator,
   Text,
 } from "react-native";
-import styles from "./style";
+
 import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 import { useEffect, useState, useRef } from "react";
 
 import Header from "../../../assets/components/Header";
-import { Feather } from "@expo/vector-icons";
 import Card from "../../../assets/components/CardListar";
 import Lista from "../../../assets/components/ListaReagioes";
+
+import { useTheme } from "../../../context/ThemeContext";
+import { createStyles } from "./style";
 
 export default function ListarTodos() {
   const navigator = useNavigation();
   const scrollRef = useRef<ScrollView>(null);
+
+  const { colors, isDark, toggleTheme } = useTheme();
+  const styles = createStyles(colors);
 
   const LIMIT = 30;
   const MIN_OFFSET = 721;
@@ -33,10 +39,7 @@ export default function ListarTodos() {
       return novoValor < MIN_OFFSET ? MIN_OFFSET : novoValor;
     });
 
-    scrollRef.current?.scrollTo({
-      y: 0,
-      animated: true,
-    });
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   }
 
   async function Somar() {
@@ -45,10 +48,7 @@ export default function ListarTodos() {
       return novoValor > MAX_OFFSET ? MAX_OFFSET : novoValor;
     });
 
-    scrollRef.current?.scrollTo({
-      y: 0,
-      animated: true,
-    });
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   }
 
   useEffect(() => {
@@ -88,77 +88,60 @@ export default function ListarTodos() {
   }, [adicionar]);
 
   return (
-    <>
-      <View style={styles.header}>
-        <Header
-          titulo="Alola"
-          voltar={<Feather name="arrow-left" size={30} color="#FFF" />}
-        />
-      </View>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <Header
+        titulo="Alola"
+        voltar={<Feather name="arrow-left" size={30} color={colors.text} />}
+      />
 
       <ScrollView
         ref={scrollRef}
-        style={{ backgroundColor: "#0B1020" }}
+        style={{ backgroundColor: colors.background }}
         contentContainerStyle={{ paddingBottom: 30 }}
+        showsVerticalScrollIndicator={false}
       >
+        {/* LISTA DE REGIÕES */}
         <View style={styles.Lista}>
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Kanto" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Kanto" as never)}>
             <Lista regiao="Kanto" cor="rgba(46, 125, 50, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Johto" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Johto" as never)}>
             <Lista regiao="Johto" cor="rgba(166, 124, 0, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Hoenn" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Hoenn" as never)}>
             <Lista regiao="Hoenn" cor="rgba(21, 101, 192, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Sinnoh" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Sinnoh" as never)}>
             <Lista regiao="Sinnoh" cor="rgba(40, 53, 147, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Unova" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Unova" as never)}>
             <Lista regiao="Unova" cor="rgba(66, 66, 66, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Kalos" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Kalos" as never)}>
             <Lista regiao="Kalos" cor="rgba(173, 20, 87, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Alola" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Alola" as never)}>
             <Lista regiao="Alola" cor="rgba(239, 108, 0, 1)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Galar" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Galar" as never)}>
             <Lista regiao="Galar" cor="rgba(183, 28, 28, 0.50)" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Paldea" as never)}
-          >
+          <TouchableOpacity onPress={() => navigator.navigate("Paldea" as never)}>
             <Lista regiao="Paldea" cor="rgba(106, 27, 154, 0.50)" />
           </TouchableOpacity>
         </View>
 
+        {/* POKÉMON LIST */}
         <View style={styles.container}>
-          {loading && <ActivityIndicator size="large" color="#000" />}
+          {loading && <ActivityIndicator size="large" color={colors.text} />}
 
           {pokemons.map((pokemon) => (
             <Card
@@ -183,6 +166,7 @@ export default function ListarTodos() {
           ))}
         </View>
 
+        {/* BOTÕES PAGINAÇÃO */}
         <View style={styles.Botoes}>
           {adicionar > MIN_OFFSET && (
             <TouchableOpacity onPress={Diminuir} style={styles.botaoDiminuir}>
@@ -197,6 +181,23 @@ export default function ListarTodos() {
           )}
         </View>
       </ScrollView>
-    </>
+
+      {/* BOTÃO DE TEMA GLOBAL */}
+      <TouchableOpacity
+        style={[
+          styles.trocaTemaButton,
+          {
+            backgroundColor: isDark ? "#FFFFFF" : "#000000",
+          },
+        ]}
+        onPress={toggleTheme}
+      >
+        <Feather
+          name={isDark ? "sun" : "moon"}
+          size={24}
+          color={isDark ? "#000000" : "#FFFFFF"}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }

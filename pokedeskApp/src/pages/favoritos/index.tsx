@@ -1,6 +1,12 @@
-import { View, ScrollView, ActivityIndicator, Text } from "react-native";
+import {
+  View,
+  ScrollView,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 
-import styles from "./style";
+import { createStyles } from "./style";
 import { useState, useCallback } from "react";
 
 import Header from "../../assets/components/Header";
@@ -10,8 +16,13 @@ import Card from "../../assets/components/CardListar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useFocusEffect } from "@react-navigation/native";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function Favoritos() {
+  const { colors, isDark, toggleTheme } = useTheme();
+
+  const styles = createStyles(colors);
+
   const [pokemons, setPokemons] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +38,9 @@ export default function Favoritos() {
 
       const favoritosSalvos = await AsyncStorage.getItem("@favoritos");
 
-      const favoritos = favoritosSalvos ? JSON.parse(favoritosSalvos) : [];
+      const favoritos = favoritosSalvos
+        ? JSON.parse(favoritosSalvos)
+        : [];
 
       if (favoritos.length === 0) {
         setPokemons([]);
@@ -36,7 +49,9 @@ export default function Favoritos() {
 
       const detailedPokemons = await Promise.all(
         favoritos.map(async (id: number) => {
-          const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+          const res = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${id}`
+          );
 
           const details = await res.json();
 
@@ -58,25 +73,36 @@ export default function Favoritos() {
   }
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.header}>
         <Header
           titulo="Favoritos"
-          voltar={<Feather name="arrow-left" size={30} color="#FFF" />}
+          voltar={
+            <Feather
+              name="arrow-left"
+              size={30}
+              color={colors.text}
+            />
+          }
         />
       </View>
 
       <ScrollView
-        style={{ backgroundColor: "#0B1020" }}
+        style={{ backgroundColor: colors.background }}
         contentContainerStyle={{ paddingBottom: 30 }}
       >
         <View style={styles.container}>
-          {loading && <ActivityIndicator size="large" color="#FFF" />}
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              color={colors.text}
+            />
+          )}
 
           {!loading && pokemons.length === 0 && (
             <Text
               style={{
-                color: "#FFFFFF",
+                color: colors.text,
                 fontSize: 18,
               }}
             >
@@ -89,9 +115,12 @@ export default function Favoritos() {
               key={pokemon.id}
               id={pokemon.id}
               nome={
-                pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+                pokemon.name.charAt(0).toUpperCase() +
+                pokemon.name.slice(1)
               }
-              numero={`#${pokemon.id.toString().padStart(4, "0")}`}
+              numero={`#${pokemon.id
+                .toString()
+                .padStart(4, "0")}`}
               imagem={{ uri: pokemon.image }}
               tipo1={
                 pokemon.types[0].charAt(0).toUpperCase() +
@@ -99,7 +128,9 @@ export default function Favoritos() {
               }
               tipo2={
                 pokemon.types[1]
-                  ? pokemon.types[1].charAt(0).toUpperCase() +
+                  ? pokemon.types[1]
+                      .charAt(0)
+                      .toUpperCase() +
                     pokemon.types[1].slice(1)
                   : null
               }
@@ -107,6 +138,24 @@ export default function Favoritos() {
           ))}
         </View>
       </ScrollView>
-    </>
+
+      <TouchableOpacity
+        style={[
+          styles.trocaTemaButton,
+          {
+            backgroundColor: isDark
+              ? "#FFFFFF"
+              : "#000000",
+          },
+        ]}
+        onPress={toggleTheme}
+      >
+        <Feather
+          name={isDark ? "sun" : "moon"}
+          size={24}
+          color={isDark ? "#000000" : "#FFFFFF"}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }

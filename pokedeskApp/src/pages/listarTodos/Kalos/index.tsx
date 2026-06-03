@@ -20,69 +20,50 @@ export default function ListarTodos() {
 
   const LIMIT = 30;
 
-  const MIN_OFFSET = 649;
-  const MAX_POKEMONS = 721;
+  const MIN_OFFSET = 0;
+  const MAX_POKEMONS = 1010;
   const MAX_OFFSET = MAX_POKEMONS - LIMIT;
 
   const [pokemons, setPokemons] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [adicionar, setAdicionar] = useState(MIN_OFFSET);
 
-  async function Diminuir() {
-    setAdicionar((prev) => {
-      const novoValor = prev - LIMIT;
-      return novoValor < MIN_OFFSET ? MIN_OFFSET : novoValor;
-    });
-
-    scrollRef.current?.scrollTo({
-      y: 0,
-      animated: true,
-    });
+  function Diminuir() {
+    setAdicionar((prev) => Math.max(prev - LIMIT, MIN_OFFSET));
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   }
 
-  async function Somar() {
-    setAdicionar((prev) => {
-      const novoValor = prev + LIMIT;
-      return novoValor > MAX_OFFSET ? MAX_OFFSET : novoValor;
-    });
-
-    scrollRef.current?.scrollTo({
-      y: 0,
-      animated: true,
-    });
+  function Somar() {
+    setAdicionar((prev) => Math.min(prev + LIMIT, MAX_OFFSET));
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   }
 
   useEffect(() => {
     async function fetchPokemons() {
-      try {
-        setLoading(true);
+      setLoading(true);
 
-        const res = await fetch(
-          `https://pokeapi.co/api/v2/pokemon?offset=${adicionar}&limit=${LIMIT}`
-        );
+      const res = await fetch(
+        `https://pokeapi.co/api/v2/pokemon?offset=${adicionar}&limit=${LIMIT}`
+      );
 
-        const data = await res.json();
+      const data = await res.json();
 
-        const detailedPokemons = await Promise.all(
-          data.results.map(async (pokemon: any) => {
-            const res = await fetch(pokemon.url);
-            const details = await res.json();
+      const detailed = await Promise.all(
+        data.results.map(async (p: any) => {
+          const r = await fetch(p.url);
+          const d = await r.json();
 
-            return {
-              id: details.id,
-              name: details.name,
-              image: details.sprites.other.home.front_default,
-              types: details.types.map((t: any) => t.type.name),
-            };
-          })
-        );
+          return {
+            id: d.id,
+            name: d.name,
+            image: d.sprites.other.home.front_default,
+            types: d.types.map((t: any) => t.type.name),
+          };
+        })
+      );
 
-        setPokemons(detailedPokemons);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
+      setPokemons(detailed);
+      setLoading(false);
     }
 
     fetchPokemons();
@@ -92,7 +73,7 @@ export default function ListarTodos() {
     <>
       <View style={styles.header}>
         <Header
-          titulo="Kalos"
+          titulo="Pokédex"
           voltar={<Feather name="arrow-left" size={30} color="#FFF" />}
         />
       </View>
@@ -103,99 +84,67 @@ export default function ListarTodos() {
         contentContainerStyle={{ paddingBottom: 30 }}
       >
         <View style={styles.Lista}>
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Kanto" as never)}
-          >
-            <Lista regiao="Kanto" cor="rgba(46, 125, 50, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Kanto" as never)}>
+            <Lista regiao="Kanto" cor="#2E7D32" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Johto" as never)}
-          >
-            <Lista regiao="Johto" cor="rgba(166, 124, 0, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Johto" as never)}>
+            <Lista regiao="Johto" cor="#A67C00" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Hoenn" as never)}
-          >
-            <Lista regiao="Hoenn" cor="rgba(21, 101, 192, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Hoenn" as never)}>
+            <Lista regiao="Hoenn" cor="#1565C0" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Sinnoh" as never)}
-          >
-            <Lista regiao="Sinnoh" cor="rgba(40, 53, 147, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Sinnoh" as never)}>
+            <Lista regiao="Sinnoh" cor="#283593" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Unova" as never)}
-          >
-            <Lista regiao="Unova" cor="rgba(66, 66, 66, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Unova" as never)}>
+            <Lista regiao="Unova" cor="#424242" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Kalos" as never)}
-          >
-            <Lista regiao="Kalos" cor="rgba(173, 20, 87, 1)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Kalos" as never)}>
+            <Lista regiao="Kalos" cor="#AD1457" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Alola" as never)}
-          >
-            <Lista regiao="Alola" cor="rgba(239, 108, 0, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Alola" as never)}>
+            <Lista regiao="Alola" cor="#EF6C00" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Galar" as never)}
-          >
-            <Lista regiao="Galar" cor="rgba(183, 28, 28, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Galar" as never)}>
+            <Lista regiao="Galar" cor="#B71C1C" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Paldea" as never)}
-          >
-            <Lista regiao="Paldea" cor="rgba(106, 27, 154, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Paldea" as never)}>
+            <Lista regiao="Paldea" cor="#6A1B9A" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.container}>
-          {loading && <ActivityIndicator size="large" color="#000" />}
+          {loading && <ActivityIndicator size="large" color="#00BFFF" />}
 
-          {pokemons.map((pokemon) => (
+          {pokemons.map((p) => (
             <Card
-              key={pokemon.id}
-              id={pokemon.id}
-              nome={
-                pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
-              }
-              numero={`#${pokemon.id.toString().padStart(4, "0")}`}
-              imagem={{ uri: pokemon.image }}
-              tipo1={
-                pokemon.types[0].charAt(0).toUpperCase() +
-                pokemon.types[0].slice(1)
-              }
-              tipo2={
-                pokemon.types[1]
-                  ? pokemon.types[1].charAt(0).toUpperCase() +
-                    pokemon.types[1].slice(1)
-                  : null
-              }
+              key={p.id}
+              id={p.id}
+              nome={p.name}
+              numero={`#${String(p.id).padStart(4, "0")}`}
+              imagem={{ uri: p.image }}
+              tipo1={p.types[0]}
+              tipo2={p.types[1]}
             />
           ))}
         </View>
 
         <View style={styles.Botoes}>
-          {adicionar > MIN_OFFSET && (
-            <TouchableOpacity onPress={Diminuir} style={styles.botaoDiminuir}>
-              <Text style={styles.textoBotao}>⬅ Mostrar anterior</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity onPress={Diminuir} style={styles.botaoDiminuir}>
+            <Text style={styles.textoBotao}>Anterior</Text>
+          </TouchableOpacity>
 
-          {adicionar < MAX_OFFSET && (
-            <TouchableOpacity onPress={Somar} style={styles.botaoSomar}>
-              <Text style={styles.textoBotao}>Mostrar mais ➜</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity onPress={Somar} style={styles.botaoSomar}>
+            <Text style={styles.textoBotao}>Próximo</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </>

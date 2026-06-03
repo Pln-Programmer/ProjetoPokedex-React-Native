@@ -7,93 +7,114 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import styles from "./style";
+import { createStyles } from "./style";
 import { useNavigation } from "@react-navigation/native";
 
-import * as WebBrowser from "expo-web-browser"
-import * as Linking from "expo-linking"
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 import { useOAuth } from "@clerk/clerk-expo";
+
+import { useTheme } from "../../context/ThemeContext";
+import { Feather } from "@expo/vector-icons";
 
 import Botao from "../../assets/components/Button";
 
-import PokeBola from "../../assets/img/jogo.png";
+import PokeVisionDark from "../../assets/img/jogo.png";
+import PokeVisionLight from "../../assets/img/jogoLight.png";
 
-WebBrowser.maybeCompleteAuthSession()
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Cadastro() {
   const navigator = useNavigation();
 
-  const [isLoading, setIsLoading] = useState(false)
+  const { colors, isDark, toggleTheme } = useTheme();
 
-  const googleOAuth = useOAuth({ strategy: "oauth_google" })
+  const styles = createStyles(colors);
 
-  async function onGoogleSignIn(){
+  const [isLoading, setIsLoading] = useState(false);
+
+  const googleOAuth = useOAuth({ strategy: "oauth_google" });
+
+  async function onGoogleSignIn() {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
 
-        const redirectURL = Linking.createURL("/")
-      const oAuthFlow = await googleOAuth.startOAuthFlow({ redirectURL })
+      const redirectURL = Linking.createURL("/");
 
-      if(oAuthFlow.authSessionResult?.type === "success"){
-        if(oAuthFlow.setActive){
-          await oAuthFlow.setActive({ session: oAuthFlow.createdSessionId })
+      const oAuthFlow = await googleOAuth.startOAuthFlow({
+        redirectURL,
+      });
+
+      if (oAuthFlow.authSessionResult?.type === "success") {
+        if (oAuthFlow.setActive) {
+          await oAuthFlow.setActive({
+            session: oAuthFlow.createdSessionId,
+          });
         }
-      } else{
-        setIsLoading(false)
+      } else {
+        setIsLoading(false);
       }
-
     } catch (error) {
-      console.log(error)
-      setIsLoading(false)
+      console.log(error);
+      setIsLoading(false);
     }
   }
 
-useEffect(() => {
-  WebBrowser.warmUpAsync();
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
 
-  return () => {
-    WebBrowser.coolDownAsync();
-  };
-}, []);
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
-          <Image source={PokeBola} style={styles.image} />
+          <Image
+            source={isDark ? PokeVisionLight : PokeVisionDark}
+            style={styles.image}
+          />
         </View>
 
         <View style={styles.card}>
           <Text style={styles.title}>Criar conta</Text>
-          <Text style={styles.subtitle}>Preencha os dados abaixo</Text>
+
+          <Text style={styles.subtitle}>
+            Preencha os dados abaixo
+          </Text>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Email</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="Digite seu email"
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.secondaryText}
               />
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Senha</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="Digite sua senha"
                 secureTextEntry
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.secondaryText}
               />
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Confirmar senha</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="Confirme sua senha"
                 secureTextEntry
-                placeholderTextColor="#999"
+                placeholderTextColor={colors.secondaryText}
               />
             </View>
           </View>
@@ -102,16 +123,40 @@ useEffect(() => {
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
 
-          <Botao title="Entrar com Google" onPress={onGoogleSignIn} isLoading={isLoading}/>
+          <Botao
+            title="Entrar com Google"
+            onPress={onGoogleSignIn}
+            isLoading={isLoading}
+          />
 
           <Text style={styles.switchText}>
             Já tem conta?
-            <TouchableOpacity onPress={() => navigator.navigate("Login")}>
+            <TouchableOpacity
+              onPress={() =>
+                navigator.navigate("Login" as never)
+              }
+            >
               <Text style={styles.link}> Clique Aqui</Text>
             </TouchableOpacity>
           </Text>
         </View>
       </ScrollView>
+
+      <TouchableOpacity
+        style={[
+          styles.trocaTemaButton,
+          {
+            backgroundColor: isDark ? "#FFFFFF" : "#000000",
+          },
+        ]}
+        onPress={toggleTheme}
+      >
+        <Feather
+          name={isDark ? "sun" : "moon"}
+          size={24}
+          color={isDark ? "#000000" : "#FFFFFF"}
+        />
+      </TouchableOpacity>
     </View>
   );
 }

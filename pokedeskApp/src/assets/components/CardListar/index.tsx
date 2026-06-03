@@ -1,13 +1,11 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
+import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 import styles from "./style";
-import { useNavigation } from "@react-navigation/native";
-
-import { useEffect, useState } from "react";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../../../context/ThemeContext";
 
 const typeColors: any = {
   Grass: "#78C850",
@@ -38,11 +36,10 @@ export default function CardListar({
   tipo1,
   tipo2,
 }: any) {
-
   const navigator = useNavigation();
+  const { colors } = useTheme();
 
   const [favorito, setFavorito] = useState(false);
-
   const idPokemon = id;
 
   useEffect(() => {
@@ -52,7 +49,6 @@ export default function CardListar({
   async function verificarFavorito() {
     try {
       const dados = await AsyncStorage.getItem("@favoritos");
-
       const favoritos = dados ? JSON.parse(dados) : [];
 
       if (favoritos.includes(idPokemon)) {
@@ -66,34 +62,37 @@ export default function CardListar({
   async function alternarFavorito() {
     try {
       const dados = await AsyncStorage.getItem("@favoritos");
-
       let favoritos = dados ? JSON.parse(dados) : [];
 
       if (favoritos.includes(idPokemon)) {
         favoritos = favoritos.filter((item: number) => item !== idPokemon);
-
         setFavorito(false);
       } else {
         favoritos.push(idPokemon);
-
         setFavorito(true);
       }
 
       await AsyncStorage.setItem("@favoritos", JSON.stringify(favoritos));
-
-      console.log(favoritos);
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+        },
+      ]}
+    >
       <TouchableOpacity style={styles.favorito} onPress={alternarFavorito}>
         <Ionicons
           name={favorito ? "star" : "star-outline"}
           size={30}
-          color={favorito ? "#FFD700" : "#999"}
+          color={favorito ? "#FFD700" : colors.secondaryText}
         />
       </TouchableOpacity>
 
@@ -101,29 +100,34 @@ export default function CardListar({
         onPress={() =>
           navigator.navigate(
             "Informacoes" as never,
-            {
-              pokemonId: id,
-            } as never
+            { pokemonId: id } as never
           )
         }
       >
-        <View style={styles.imageContainer}>
+        <View
+          style={[
+            styles.imageContainer,
+            { backgroundColor: colors.background },
+          ]}
+        >
           <Image source={imagem} style={styles.image} />
         </View>
 
         <View style={styles.info}>
-          <Text style={styles.number}>{numero}</Text>
+          <Text style={[styles.number, { color: colors.secondaryText }]}>
+            {numero}
+          </Text>
 
-          <Text style={styles.name}>{nome}</Text>
+          <Text style={[styles.name, { color: colors.text }]}>
+            {nome}
+          </Text>
 
           <View style={styles.types}>
             {tipo1 && (
               <View
                 style={[
                   styles.badge,
-                  {
-                    backgroundColor: typeColors[tipo1],
-                  },
+                  { backgroundColor: typeColors[tipo1] || "#999" },
                 ]}
               >
                 <Text style={styles.badgeText}>{tipo1}</Text>
@@ -134,9 +138,7 @@ export default function CardListar({
               <View
                 style={[
                   styles.badge,
-                  {
-                    backgroundColor: typeColors[tipo2],
-                  },
+                  { backgroundColor: typeColors[tipo2] || "#999" },
                 ]}
               >
                 <Text style={styles.badgeText}>{tipo2}</Text>

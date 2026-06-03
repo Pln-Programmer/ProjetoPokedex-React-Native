@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "pokedeskApp",
-    "slug": "pokedeskApp",
+    "name": "PokeVision",
+    "slug": "PokeVision",
+    "scheme": "PokeVision",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

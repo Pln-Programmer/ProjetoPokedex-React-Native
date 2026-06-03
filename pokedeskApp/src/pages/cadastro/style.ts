@@ -1,107 +1,144 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0B1020",
-  },
+export const createStyles = (colors: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
 
-  scroll: {
-    flexGrow: 1,
-    justifyContent: "center",
-    padding: 24,
-  },
+    scroll: {
+      flexGrow: 1,
+      justifyContent: "center",
+      padding: 24,
+    },
 
-  header: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
+    header: {
+      alignItems: "center",
+      marginBottom: 30,
+    },
 
-  image: {
-    width: 250,
-    height: 170,
-    resizeMode: "contain",
-  },
+    image: {
+      width: 250,
+      height: 170,
+      resizeMode: "contain",
+    },
 
-  card: {
-    backgroundColor: "#11182D",
+    card: {
+      backgroundColor: colors.card,
 
-    borderRadius: 24,
-    padding: 22,
+      borderRadius: 24,
+      padding: 22,
 
-    borderWidth: 1,
-    borderColor: "rgba(0,191,255,0.15)",
-  },
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
 
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#fff",
-  },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
 
-  subtitle: {
-    fontSize: 14,
-    color: "#8FA3C7",
+      color: colors.text,
+    },
 
-    marginTop: 4,
-    marginBottom: 14,
-  },
+    subtitle: {
+      fontSize: 14,
 
-  form: {
-    gap: 12,
-  },
+      color: colors.secondaryText,
 
-  inputGroup: {
-    gap: 6,
-  },
+      marginTop: 4,
+      marginBottom: 14,
+    },
 
-  label: {
-    fontSize: 13,
-    color: "#B8C7E0",
-    fontWeight: "600",
-  },
+    form: {
+      gap: 12,
+    },
 
-  input: {
-    backgroundColor: "#1A2440",
+    inputGroup: {
+      gap: 6,
+    },
 
-    borderWidth: 1,
-    borderColor: "#243251",
+    label: {
+      fontSize: 13,
 
-    borderRadius: 14,
+      color: colors.secondaryText,
 
-    padding: 14,
+      fontWeight: "600",
+    },
 
-    color: "#fff",
-    fontSize: 15,
-  },
+    input: {
+      backgroundColor: colors.button,
 
-  button: {
-    backgroundColor: "#00BFFF",
+      borderWidth: 1,
+      borderColor: colors.border,
 
-    padding: 15,
-    borderRadius: 14,
+      borderRadius: 14,
 
-    alignItems: "center",
+      padding: 14,
 
-    marginTop: 18,
-  },
+      color: colors.text,
 
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+      fontSize: 15,
+    },
 
-  switchText: {
-    textAlign: "center",
-    marginTop: 12,
-    color: "#8FA3C7",
-  },
+    button: {
+      backgroundColor: colors.accent,
 
-  link: {
-    color: "#00BFFF",
-    fontWeight: "bold"
-  },
-});
+      padding: 15,
 
-export default styles;
+      borderRadius: 14,
+
+      alignItems: "center",
+
+      marginTop: 18,
+    },
+
+    buttonText: {
+      color: "#FFFFFF",
+
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+
+    switchText: {
+      textAlign: "center",
+
+      marginTop: 12,
+
+      color: colors.secondaryText,
+    },
+
+    link: {
+      color: colors.accent,
+
+      fontWeight: "bold",
+    },
+
+    trocaTemaButton: {
+      position: "absolute",
+
+      right: 25,
+      bottom: 35,
+
+      width: 60,
+      height: 60,
+
+      borderRadius: 999,
+
+      justifyContent: "center",
+      alignItems: "center",
+
+      shadowColor: "#000",
+
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+
+      shadowOpacity: 0.25,
+
+      shadowRadius: 8,
+
+      elevation: 8,
+    },
+  });

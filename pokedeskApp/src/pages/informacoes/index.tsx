@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import {
   View,
@@ -11,14 +11,13 @@ import {
 } from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
-
 import { Feather } from "@expo/vector-icons";
-
 import { Audio } from "expo-av";
 
 import OndasSonoras from "../../assets/img/ondas.png";
 
-import styles from "./style";
+import { createStyles } from "./style";
+import { useTheme } from "../../context/ThemeContext";
 
 const TYPE_COLORS: any = {
   Grass: "#78C850",
@@ -43,132 +42,100 @@ const TYPE_COLORS: any = {
 
 export default function PokemonDetail() {
   const route = useRoute();
-
   const navigation = useNavigation();
 
-  const { pokemonId } = route.params as {
-    pokemonId: number;
-  };
+  const { colors, isDark, toggleTheme } = useTheme();
+  const styles = createStyles(colors);
+
+  const { pokemonId } = route.params as { pokemonId: number };
 
   const [showHeaderBar, setShowHeaderBar] = useState(false);
   const [data, setData] = useState<any>(null);
   const [evolucoes, setEvolucoes] = useState<any[]>([]);
-const [metodosEvolucoes, setMetodosEvolucoes] = useState<any[]>([]);
+  const [metodosEvolucoes, setMetodosEvolucoes] = useState<any[]>([]);
   const [isShiny, setIsShiny] = useState(false);
 
-useEffect(() => {
-  async function fetchPokemon() {
-    try {
-      const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-      );
+  const scrollRef = useRef<ScrollView>(null);
 
-      const json = await response.json();
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
 
-      setData(json);
+    async function fetchPokemon() {
+      try {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+        );
+        const json = await response.json();
+        setData(json);
 
-      const speciesResponse = await fetch(
-        `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
-      );
+        const speciesResponse = await fetch(
+          `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
+        );
+        const speciesData = await speciesResponse.json();
 
-      const speciesData = await speciesResponse.json();
+        const evolutionResponse = await fetch(speciesData.evolution_chain.url);
+        const evolutionData = await evolutionResponse.json();
 
-      const evolutionResponse = await fetch(
-        speciesData.evolution_chain.url
-      );
+        const evolutionNames = nomeEvolucoes(evolutionData.chain);
+        const metodos = obterMetodosEvolucao(evolutionData.chain);
 
-      const evolutionData = await evolutionResponse.json();
+        setMetodosEvolucoes(metodos);
 
-      const evolutionNames = nomeEvolucoes(
-        evolutionData.chain
-      );
+        const evolutionPokemons = await Promise.all(
+          evolutionNames.map(async (name: string) => {
+            const response = await fetch(
+              `https://pokeapi.co/api/v2/pokemon/${name}`
+            );
+            return response.json();
+          })
+        );
 
-      const metodos = obterMetodosEvolucao(
-  evolutionData.chain
-);
-
-setMetodosEvolucoes(metodos);
-
-      const evolutionPokemons = await Promise.all(
-        evolutionNames.map(async (name: string) => {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${name}`
-          );
-
-          return response.json();
-        })
-      );
-
-      setEvolucoes(evolutionPokemons);
-    } catch (error) {
-      console.log(error);
+        setEvolucoes(evolutionPokemons);
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
 
-  fetchPokemon();
-}, [pokemonId]);
+    fetchPokemon();
+  }, [pokemonId]);
 
   function nomeEvolucoes(chain: any) {
-  const evolucoes = [];
+    const evolucoes = [];
+    let current = chain;
 
-  let current = chain;
+    while (current) {
+      evolucoes.push(current.species.name);
+      current = current.evolves_to[0];
+    }
 
-  while (current) {
-    evolucoes.push(current.species.name);
-    current = current.evolves_to[0];
+    return evolucoes;
   }
 
-  return evolucoes;
-}
+  function obterMetodosEvolucao(chain: any) {
+    const metodos = [];
+    let atual = chain;
 
-function obterMetodosEvolucao(chain: any) {
-  const metodos = [];
+    while (atual?.evolves_to?.length > 0) {
+      const detalhes = atual.evolves_to[0].evolution_details?.[0] || null;
+      metodos.push(detalhes);
+      atual = atual.evolves_to[0];
+    }
 
-  let atual = chain;
-
-  while (atual?.evolves_to?.length > 0) {
-    const detalhes =
-      atual.evolves_to[0].evolution_details?.[0] || null;
-
-    metodos.push(detalhes);
-
-    atual = atual.evolves_to[0];
+    return metodos;
   }
 
-  return metodos;
-}
+  function textoEvolucao(details: any) {
+    if (!details) return "Unknown";
 
-function textoEvolucao(details: any) {
-  if (!details) {
-    return "Unknown";
+    if (details.min_level) return `Lv. ${details.min_level}`;
+    if (details.item?.name) return details.item.name.replace("-", " ").toUpperCase();
+    if (details.min_happiness) return "HIGH FRIENDSHIP";
+    if (details.time_of_day) return details.time_of_day.toUpperCase();
+    if (details.held_item?.name)
+      return `HOLDING ${details.held_item.name.replace("-", " ").toUpperCase()}`;
+
+    return "SPECIAL";
   }
-
-  if (details.min_level) {
-    return `Lv. ${details.min_level}`;
-  }
-
-  if (details.item?.name) {
-    return details.item.name
-      .replace("-", " ")
-      .toUpperCase();
-  }
-
-  if (details.min_happiness) {
-    return "HIGH FRIENDSHIP";
-  }
-
-  if (details.time_of_day) {
-    return details.time_of_day.toUpperCase();
-  }
-
-  if (details.held_item?.name) {
-    return `HOLDING ${details.held_item.name
-      .replace("-", " ")
-      .toUpperCase()}`;
-  }
-
-  return "SPECIAL";
-}
 
   function mostrarShiny() {
     setIsShiny((prev) => !prev);
@@ -176,14 +143,9 @@ function textoEvolucao(details: any) {
 
   async function reproduzirSom(url: string) {
     try {
-      if (!url) {
-        return;
-      }
+      if (!url) return;
 
-      const { sound } = await Audio.Sound.createAsync({
-        uri: url,
-      });
-
+      const { sound } = await Audio.Sound.createAsync({ uri: url });
       await sound.playAsync();
     } catch (error) {
       console.log("Erro ao reproduzir som:", error);
@@ -205,29 +167,14 @@ function textoEvolucao(details: any) {
   const mainColor = TYPE_COLORS[mainType] || "#777";
 
   const somClassico = data.cries?.legacy;
-
   const somAtual = data.cries?.latest;
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: mainColor,
-        },
-      ]}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={[styles.container, { backgroundColor: mainColor }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {showHeaderBar && (
-        <View
-          style={[
-            styles.headerFixa,
-            {
-              backgroundColor: mainColor,
-            },
-          ]}
-        >
+        <View style={[styles.headerFixa, { backgroundColor: mainColor }]}>
           <TouchableOpacity
             style={styles.botaoVoltar}
             onPress={() => navigation.goBack()}
@@ -242,15 +189,10 @@ function textoEvolucao(details: any) {
       )}
 
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         onScroll={(event) => {
-          const scrollY = event.nativeEvent.contentOffset.y;
-
-          if (scrollY > 80) {
-            setShowHeaderBar(true);
-          } else {
-            setShowHeaderBar(false);
-          }
+          setShowHeaderBar(event.nativeEvent.contentOffset.y > 80);
         }}
         scrollEventThrottle={16}
       >
@@ -273,7 +215,10 @@ function textoEvolucao(details: any) {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.containerImagem} onPress={mostrarShiny}>
+        <TouchableOpacity
+          style={styles.containerImagem}
+          onPress={mostrarShiny}
+        >
           <Image
             source={{
               uri: isShiny
@@ -288,6 +233,7 @@ function textoEvolucao(details: any) {
           <Text style={styles.avisoShiny}>
             Clique no pokemon para ver seu Shiny
           </Text>
+
           <View style={styles.containerTipos}>
             {data.types.map((item: any) => {
               const typeName =
@@ -299,9 +245,7 @@ function textoEvolucao(details: any) {
                   key={item.type.name}
                   style={[
                     styles.tipoBadge,
-                    {
-                      backgroundColor: TYPE_COLORS[typeName] || "#777",
-                    },
+                    { backgroundColor: TYPE_COLORS[typeName] || "#777" },
                   ]}
                 >
                   <Text style={styles.tipoTexto}>{typeName}</Text>
@@ -310,29 +254,24 @@ function textoEvolucao(details: any) {
             })}
           </View>
 
-          <Text
-            style={[
-              styles.tituloSecao,
-              {
-                color: mainColor,
-              },
-            ]}
-          >
+          <Text style={[styles.tituloSecao, { color: mainColor }]}>
             About
           </Text>
 
           <View style={styles.containerSobre}>
             <View style={styles.itemSobre}>
-              <Text style={styles.valorSobre}>⚖️ {data.weight / 10} kg</Text>
-
+              <Text style={styles.valorSobre}>
+                ⚖️ {data.weight / 10} kg
+              </Text>
               <Text style={styles.labelSobre}>Peso</Text>
             </View>
 
             <View style={styles.divisor} />
 
             <View style={styles.itemSobre}>
-              <Text style={styles.valorSobre}>📏 {data.height / 10} m</Text>
-
+              <Text style={styles.valorSobre}>
+                📏 {data.height / 10} m
+              </Text>
               <Text style={styles.labelSobre}>Altura</Text>
             </View>
 
@@ -342,10 +281,10 @@ function textoEvolucao(details: any) {
               <Text style={styles.valorSobre}>
                 {data.moves[0]?.move.name.replace("-", " ").toUpperCase()}
               </Text>
-
               <Text style={styles.labelSobre}>Move</Text>
             </View>
           </View>
+
           <View style={styles.habilidade}>
             <View style={styles.divisorTop} />
             {data.abilities.map((item: any) => (
@@ -356,14 +295,7 @@ function textoEvolucao(details: any) {
             <Text style={styles.labelSobre}>Habilidades</Text>
           </View>
 
-          <Text
-            style={[
-              styles.tituloSecao,
-              {
-                color: mainColor,
-              },
-            ]}
-          >
+          <Text style={[styles.tituloSecao, { color: mainColor }]}>
             Base Stats
           </Text>
 
@@ -372,12 +304,7 @@ function textoEvolucao(details: any) {
               {data.stats.map((s: any) => (
                 <Text
                   key={s.stat.name}
-                  style={[
-                    styles.textoLabelStat,
-                    {
-                      color: mainColor,
-                    },
-                  ]}
+                  style={[styles.textoLabelStat, { color: mainColor }]}
                 >
                   {s.stat.name
                     .replace("special-attack", "Sp. Atk")
@@ -416,12 +343,7 @@ function textoEvolucao(details: any) {
 
           <View style={styles.audios}>
             <TouchableOpacity
-              style={[
-                styles.botaoAudio,
-                {
-                  borderColor: mainColor,
-                },
-              ]}
+              style={[styles.botaoAudio, { borderColor: mainColor }]}
               onPress={() => reproduzirSom(somClassico)}
             >
               <View
@@ -438,15 +360,7 @@ function textoEvolucao(details: any) {
 
               <View style={styles.infoAudio}>
                 <Text style={styles.audioTitulo}>Rugido clássico</Text>
-
-                <Text
-                  style={[
-                    styles.audioSubtitulo,
-                    {
-                      color: mainColor,
-                    },
-                  ]}
-                >
+                <Text style={[styles.audioSubtitulo, { color: mainColor }]}>
                   Toque para ouvir
                 </Text>
               </View>
@@ -455,12 +369,7 @@ function textoEvolucao(details: any) {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[
-                styles.botaoAudio,
-                {
-                  borderColor: mainColor,
-                },
-              ]}
+              style={[styles.botaoAudio, { borderColor: mainColor }]}
               onPress={() => reproduzirSom(somAtual)}
             >
               <View
@@ -477,15 +386,7 @@ function textoEvolucao(details: any) {
 
               <View style={styles.infoAudio}>
                 <Text style={styles.audioTitulo}>Rugido atual</Text>
-
-                <Text
-                  style={[
-                    styles.audioSubtitulo,
-                    {
-                      color: mainColor,
-                    },
-                  ]}
-                >
+                <Text style={[styles.audioSubtitulo, { color: mainColor }]}>
                   Toque para ouvir
                 </Text>
               </View>
@@ -493,79 +394,76 @@ function textoEvolucao(details: any) {
               <Image source={OndasSonoras} style={styles.audioOndas} />
             </TouchableOpacity>
           </View>
+
           <View style={styles.containerEvolucoes}>
-  <Text
-    style={[
-      styles.tituloSecao,
-      {
-        color: mainColor,
-      },
-    ]}
-  >
-    Evoluções
-  </Text>
+            <Text style={[styles.tituloSecao, { color: mainColor }]}>
+              Evoluções
+            </Text>
 
-{evolucoes.map((pokemon, index) => (
-  <React.Fragment key={pokemon.id}>
-    <TouchableOpacity
-      style={styles.cardEvolucao}
-      onPress={() =>
-        navigation.navigate(
-          "PokemonDetail" as never,
-          {
-            pokemonId: pokemon.id,
-          } as never
-        )
-      }
-    >
-      <Image
-        source={{
-          uri:
-            pokemon.sprites.other[
-              "official-artwork"
-            ].front_default,
-        }}
-        style={styles.imagemEvolucao}
-      />
+            {evolucoes.map((pokemon, index) => (
+              <React.Fragment key={pokemon.id}>
+                <TouchableOpacity
+                  style={styles.cardEvolucao}
+                  onPress={() =>
+                    navigation.navigate("Informacoes" as never, {
+                      pokemonId: pokemon.id,
+                    } as never)
+                  }
+                >
+                  <Image
+                    source={{
+                      uri:
+                        pokemon.sprites.other["official-artwork"].front_default,
+                    }}
+                    style={styles.imagemEvolucao}
+                  />
 
-      <Text style={styles.nomeEvolucao}>
-        {pokemon.name.charAt(0).toUpperCase() +
-          pokemon.name.slice(1)}
-      </Text>
+                  <Text style={styles.nomeEvolucao}>
+                    {pokemon.name.charAt(0).toUpperCase() +
+                      pokemon.name.slice(1)}
+                  </Text>
 
-      <Text style={styles.idEvolucao}>
-        #{pokemon.id.toString().padStart(3, "0")}
-      </Text>
-    </TouchableOpacity>
+                  <Text style={styles.idEvolucao}>
+                    #{pokemon.id.toString().padStart(3, "0")}
+                  </Text>
+                </TouchableOpacity>
 
-    {index < evolucoes.length - 1 && (
-      <View style={styles.containerMetodo}>
+                {index < evolucoes.length - 1 && (
+                  <View style={styles.containerMetodo}>
+                    <Feather
+                      name="chevron-down"
+                      size={28}
+                      color={mainColor}
+                    />
 
-<Feather
-  name="chevron-down"
-  size={28}
-  color={mainColor}
-/>
-
-        <Text
-          style={[
-            styles.metodoEvolucao,
-            {
-              color: mainColor,
-            },
-          ]}
-        >
-          {textoEvolucao(
-            metodosEvolucoes[index]
-          )}
-        </Text>
-      </View>
-    )}
-  </React.Fragment>
-))}
-</View>
+                    <Text
+                      style={[styles.metodoEvolucao, { color: mainColor }]}
+                    >
+                      {textoEvolucao(metodosEvolucoes[index])}
+                    </Text>
+                  </View>
+                )}
+              </React.Fragment>
+            ))}
+          </View>
         </View>
       </ScrollView>
+
+      <TouchableOpacity
+        style={[
+          styles.trocaTemaButton,
+          {
+            backgroundColor: isDark ? "#FFFFFF" : "#000000",
+          },
+        ]}
+        onPress={toggleTheme}
+      >
+        <Feather
+          name={isDark ? "sun" : "moon"}
+          size={24}
+          color={isDark ? "#000000" : "#FFFFFF"}
+        />
+      </TouchableOpacity>
     </View>
   );
 }

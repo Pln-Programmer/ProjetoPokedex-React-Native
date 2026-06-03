@@ -1,56 +1,83 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: "#0B1020",
-  },
+export const createStyles = (colors: any) =>
+  StyleSheet.create({
+    header: {
+      backgroundColor: colors.background,
+    },
 
-  container: {
-    alignItems: "center",
+    container: {
+      alignItems: "center",
 
-    backgroundColor: "#0B1020",
+      backgroundColor: colors.background,
 
-    paddingTop: 14,
-    paddingBottom: 30,
+      paddingTop: 14,
+      paddingBottom: 30,
 
-    flexGrow: 1,
-  },
+      flexGrow: 1,
+    },
 
-  vazioContainer: {
-    flex: 1,
+    vazioContainer: {
+      flex: 1,
 
-    justifyContent: "center",
-    alignItems: "center",
+      justifyContent: "center",
+      alignItems: "center",
 
-    paddingTop: 80,
-  },
+      paddingTop: 80,
+    },
 
-  vazioTitulo: {
-    color: "#FFFFFF",
+    vazioTitulo: {
+      color: colors.text,
 
-    fontSize: 22,
-    fontWeight: "bold",
+      fontSize: 22,
+      fontWeight: "bold",
 
-    marginTop: 18,
-  },
+      marginTop: 18,
+    },
 
-  vazioTexto: {
-    color: "#8FA3C7",
+    vazioTexto: {
+      color: colors.secondaryText,
 
-    fontSize: 15,
+      fontSize: 15,
 
-    marginTop: 8,
+      marginTop: 8,
 
-    textAlign: "center",
+      textAlign: "center",
 
-    paddingHorizontal: 40,
+      paddingHorizontal: 40,
 
-    lineHeight: 22,
-  },
+      lineHeight: 22,
+    },
 
-  loading: {
-    marginTop: 40,
-  },
-});
+    loading: {
+      marginTop: 40,
+    },
 
-export default styles;
+    trocaTemaButton: {
+      position: "absolute",
+
+      right: 25,
+      bottom: 35,
+
+      width: 60,
+      height: 60,
+
+      borderRadius: 999,
+
+      justifyContent: "center",
+      alignItems: "center",
+
+      shadowColor: "#000",
+
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+
+      shadowOpacity: 0.25,
+
+      shadowRadius: 8,
+
+      elevation: 8,
+    },
+  });
