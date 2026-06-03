@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import {
   View,
@@ -55,8 +55,13 @@ export default function PokemonDetail() {
   const [evolucoes, setEvolucoes] = useState<any[]>([]);
 const [metodosEvolucoes, setMetodosEvolucoes] = useState<any[]>([]);
   const [isShiny, setIsShiny] = useState(false);
+  const scrollRef = useRef<ScrollView>(null);
 
 useEffect(() => {
+  scrollRef.current?.scrollTo({
+    y: 0,
+    animated: true,
+  });
   async function fetchPokemon() {
     try {
       const response = await fetch(
@@ -253,6 +258,7 @@ function textoEvolucao(details: any) {
           }
         }}
         scrollEventThrottle={16}
+        ref={scrollRef}
       >
         <View style={styles.cabecalho}>
           <TouchableOpacity
@@ -511,7 +517,7 @@ function textoEvolucao(details: any) {
       style={styles.cardEvolucao}
       onPress={() =>
         navigation.navigate(
-          "PokemonDetail" as never,
+          "Informacoes" as never,
           {
             pokemonId: pokemon.id,
           } as never
