@@ -54,19 +54,18 @@ export default function PokemonDetail() {
   const [evolucoes, setEvolucoes] = useState<any[]>([]);
   const [metodosEvolucoes, setMetodosEvolucoes] = useState<any[]>([]);
   const [isShiny, setIsShiny] = useState(false);
-
   const scrollRef = useRef<ScrollView>(null);
 
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+useEffect(() => {
+  async function fetchPokemon() {
+    try {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+      );
 
-    async function fetchPokemon() {
-      try {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-        );
-        const json = await response.json();
-        setData(json);
+      const json = await response.json();
+
+      setData(json);
 
         const speciesResponse = await fetch(
           `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
@@ -195,6 +194,7 @@ export default function PokemonDetail() {
           setShowHeaderBar(event.nativeEvent.contentOffset.y > 80);
         }}
         scrollEventThrottle={16}
+        ref={scrollRef}
       >
         <View style={styles.cabecalho}>
           <TouchableOpacity
@@ -400,23 +400,28 @@ export default function PokemonDetail() {
               Evoluções
             </Text>
 
-            {evolucoes.map((pokemon, index) => (
-              <React.Fragment key={pokemon.id}>
-                <TouchableOpacity
-                  style={styles.cardEvolucao}
-                  onPress={() =>
-                    navigation.navigate("Informacoes" as never, {
-                      pokemonId: pokemon.id,
-                    } as never)
-                  }
-                >
-                  <Image
-                    source={{
-                      uri:
-                        pokemon.sprites.other["official-artwork"].front_default,
-                    }}
-                    style={styles.imagemEvolucao}
-                  />
+{evolucoes.map((pokemon, index) => (
+  <React.Fragment key={pokemon.id}>
+    <TouchableOpacity
+      style={styles.cardEvolucao}
+      onPress={() =>
+        navigation.navigate(
+          "PokemonDetail" as never,
+          {
+            pokemonId: pokemon.id,
+          } as never
+        )
+      }
+    >
+      <Image
+        source={{
+          uri:
+            pokemon.sprites.other[
+              "official-artwork"
+            ].front_default,
+        }}
+        style={styles.imagemEvolucao}
+      />
 
                   <Text style={styles.nomeEvolucao}>
                     {pokemon.name.charAt(0).toUpperCase() +
