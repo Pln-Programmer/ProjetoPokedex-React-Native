@@ -34,7 +34,7 @@ export const createStyles = (colors: any) =>
 
     botaoSomar: {
       flex: 1,
-      backgroundColor: colors.primary,
+      backgroundColor: "#00BFFF",
       padding: 14,
       borderRadius: 14,
       alignItems: "center",
@@ -55,14 +55,14 @@ export const createStyles = (colors: any) =>
       fontWeight: "bold",
     },
     trocaTemaButton: {
-  position: "absolute",
-  right: 25,
-  bottom: 35,
-  width: 60,
-  height: 60,
-  borderRadius: 999,
-  justifyContent: "center",
-  alignItems: "center",
-  elevation: 8,
-},
+      position: "absolute",
+      right: 25,
+      bottom: 35,
+      width: 60,
+      height: 60,
+      borderRadius: 999,
+      justifyContent: "center",
+      alignItems: "center",
+      elevation: 8,
+    },
   });

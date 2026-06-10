@@ -19,6 +19,7 @@ export default function Header({ titulo, voltar }) {
   async function handleLogout() {
     try {
       await signOut();
+      navigator.navigate("Login" as never);
     } catch (error) {
       console.log("Erro ao sair:", error);
     }

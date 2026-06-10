@@ -172,7 +172,6 @@ export default function ListarKanto() {
           ))}
         </View>
 
-        {/* BOTÕES */}
         <View style={styles.Botoes}>
           {offset > MIN_OFFSET && (
             <TouchableOpacity onPress={Diminuir} style={styles.botaoDiminuir}>
@@ -188,7 +187,6 @@ export default function ListarKanto() {
         </View>
       </ScrollView>
 
-      {/* BOTÃO TEMA GLOBAL */}
       <TouchableOpacity
         style={[
           styles.trocaTemaButton,

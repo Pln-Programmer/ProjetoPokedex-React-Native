@@ -9,7 +9,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./src/assets/img/iconeApp.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,11 +18,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/img/iconeApp.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.arggus999.pokedeskApp"
+      "package": "com.arggus999.pokedexApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,8 +35,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "67ca8233-723d-4a6b-8a91-fe1714379cdc"
+        "projectId": "a26133db-8cc1-44ba-9311-8658b2289138"
       }
-    }
+    },
+    "owner": "arggus999"
   }
 }

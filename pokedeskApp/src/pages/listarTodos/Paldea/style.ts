@@ -1,66 +1,102 @@
 import { StyleSheet } from "react-native";
 
-export default StyleSheet.create({
-  header: {
-    backgroundColor: "#0B1020",
-  },
+export const createStyles = (colors: any) =>
+  StyleSheet.create({
+    containerScreen: {
+      flex: 1,
+    },
 
-  scroll: {
-    backgroundColor: "#0B1020",
-  },
+    Lista: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
 
-  lista: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
+      backgroundColor: colors.card,
 
-    backgroundColor: "#11182D",
+      padding: 14,
 
-    padding: 12,
-    gap: 10,
+      gap: 10,
 
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(0,191,255,0.08)",
-  },
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
 
-  container: {
-    alignItems: "center",
-    backgroundColor: "#0B1020",
-    paddingVertical: 14,
-  },
+    containerCards: {
+      alignItems: "center",
 
-  botoes: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+      backgroundColor: colors.background,
 
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+      paddingVertical: 14,
 
-    gap: 10,
-    backgroundColor: "#0B1020",
-  },
+      flexGrow: 1,
+    },
 
-  botaoPrimario: {
-    flex: 1,
-    backgroundColor: "#00BFFF",
-    paddingVertical: 14,
-    borderRadius: 16,
-    alignItems: "center",
-  },
+    Botoes: {
+      flexDirection: "row",
 
-  botaoSecundario: {
-    flex: 1,
-    backgroundColor: "#1A2440",
-    paddingVertical: 14,
-    borderRadius: 16,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(0,191,255,0.15)",
-  },
+      justifyContent: "space-between",
+      alignItems: "center",
 
-  textoBotao: {
-    color: "#FFF",
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-});
+      paddingHorizontal: 20,
+      paddingTop: 10,
+      paddingBottom: 35,
+
+      gap: 10,
+
+      backgroundColor: colors.background,
+    },
+
+    botaoSomar: {
+      flex: 1,
+
+      backgroundColor: "#00BFFF",
+
+      paddingVertical: 14,
+
+      borderRadius: 16,
+
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    botaoDiminuir: {
+      flex: 1,
+
+      backgroundColor: colors.card,
+
+      borderWidth: 1,
+      borderColor: colors.border,
+
+      paddingVertical: 14,
+
+      borderRadius: 16,
+
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    textoBotao: {
+      color: colors.text,
+
+      fontSize: 15,
+      fontWeight: "bold",
+
+      letterSpacing: 0.3,
+    },
+
+    trocaTemaButton: {
+      position: "absolute",
+      right: 25,
+      bottom: 35,
+
+      width: 60,
+      height: 60,
+
+      borderRadius: 999,
+
+      justifyContent: "center",
+      alignItems: "center",
+
+      elevation: 8,
+    },
+  });

@@ -1,18 +1,18 @@
 export const darkColors = {
-  background: "#F4F7FC",
-  card: "#FFFFFF",
+  background: "#0B1020",
+  card: "#11182D",
 
-  text: "#1E293B",
-  secondaryText: "#64748B",
+  text: "#FFFFFF",
+  secondaryText: "#8FA3C7",
 
-  border: "rgba(15,23,42,0.08)",
-  borderStrong: "rgba(15,23,42,0.12)",
+  border: "rgba(255,255,255,0.08)",
+  borderStrong: "rgba(255,255,255,0.12)",
 
-  button: "#E8EEF8",
+  button: "#11182D",
 
-  progressBackground: "#DCE6F3",
+  progressBackground: "rgba(255,255,255,0.08)",
 
-  divider: "#D9E2EF",
+  divider: "rgba(255,255,255,0.08)",
 
   accent: "#00BFFF",
 };

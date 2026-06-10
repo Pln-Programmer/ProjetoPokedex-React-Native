@@ -3,49 +3,31 @@ import { StyleSheet } from "react-native";
 export const createStyles = (colors: any) =>
   StyleSheet.create({
     container: {
-      flexGrow: 1,
-      padding: 20,
+      flex: 1,
+      paddingHorizontal: 20,
+      paddingTop: 20,
       backgroundColor: colors.background,
     },
 
     input: {
       width: "100%",
-      height: 55,
+      minHeight: 55,
+
+      backgroundColor: colors.card,
+
+      borderWidth: 2,
+      borderColor: colors.border,
 
       borderRadius: 16,
 
-      paddingHorizontal: 18,
-
-      fontSize: 15,
+      paddingHorizontal: 16,
 
       color: colors.text,
-
-      borderWidth: 1,
-      borderColor: colors.border,
+      fontSize: 15,
 
       marginBottom: 15,
 
-      backgroundColor: colors.card,
-    },
-
-    botao: {
-      width: "100%",
-      height: 55,
-
-      backgroundColor: colors.accent,
-
-      borderRadius: 16,
-
-      alignItems: "center",
-      justifyContent: "center",
-
-      marginBottom: 24,
-    },
-
-    botaoTexto: {
-      color: "#FFF",
-      fontSize: 16,
-      fontWeight: "bold",
+      overflow: "hidden",
     },
 
     card: {
@@ -64,25 +46,16 @@ export const createStyles = (colors: any) =>
 
       gap: 15,
 
-      shadowColor: "#00BFFF",
-
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-
-      shadowOpacity: 0.12,
-      shadowRadius: 10,
+      marginBottom: 12,
 
       elevation: 5,
 
-      marginBottom: 12,
+      overflow: "hidden",
     },
 
     imagem: {
       width: 120,
       height: 120,
-
       resizeMode: "contain",
     },
 
@@ -100,12 +73,8 @@ export const createStyles = (colors: any) =>
     nome: {
       fontSize: 24,
       fontWeight: "bold",
-
       color: colors.text,
-
       marginVertical: 6,
-
-      letterSpacing: 0.5,
     },
 
     tiposContainer: {
@@ -115,11 +84,8 @@ export const createStyles = (colors: any) =>
 
     tipo: {
       width: "100%",
-
       paddingVertical: 8,
-
       borderRadius: 10,
-
       alignItems: "center",
     },
 
@@ -127,13 +93,10 @@ export const createStyles = (colors: any) =>
       color: "#FFF",
       fontWeight: "bold",
       fontSize: 12,
-
-      letterSpacing: 0.5,
     },
 
     trocaTemaButton: {
       position: "absolute",
-
       right: 25,
       bottom: 35,
 
@@ -144,17 +107,6 @@ export const createStyles = (colors: any) =>
 
       justifyContent: "center",
       alignItems: "center",
-
-      shadowColor: "#000",
-
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-
-      shadowOpacity: 0.25,
-
-      shadowRadius: 8,
 
       elevation: 8,
     },

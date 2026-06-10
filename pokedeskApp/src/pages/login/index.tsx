@@ -74,7 +74,7 @@ const { colors, isDark, toggleTheme } = useTheme();
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
           <Image
-            source={isDark ? PokeVisionLight : PokeVisionDark}
+            source={isDark ? PokeVisionDark : PokeVisionLight}
             style={styles.image}
           />
         </View>
@@ -108,7 +108,11 @@ const { colors, isDark, toggleTheme } = useTheme();
               />
             </View>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button}
+            onPress={() =>
+                  navigator.navigate("Home" as never)
+                }
+                >
               <Text style={styles.buttonText}>Logar</Text>
             </TouchableOpacity>
 

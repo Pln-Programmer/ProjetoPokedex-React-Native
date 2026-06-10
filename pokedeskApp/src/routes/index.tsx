@@ -1,5 +1,5 @@
 import StackRoutes from "./stack.routes";
 
-export default function Routes({ isSignedIn }) {
-  return <StackRoutes isSignedIn={isSignedIn} />;
+export default function Routes() {
+  return <StackRoutes />;
 }

@@ -15,13 +15,14 @@ import Card from "../../../assets/components/CardListar";
 import Lista from "../../../assets/components/ListaReagioes";
 
 import { useTheme } from "../../../context/ThemeContext";
-import styles from "./style";
+import { createStyles } from "./style";
 
 export default function ListarTodos() {
   const navigator = useNavigation();
   const scrollRef = useRef<ScrollView>(null);
 
-  const { colors } = useTheme();
+  const { colors, isDark, toggleTheme } = useTheme();
+  const styles = createStyles(colors);
 
   const LIMIT = 30;
   const MIN_OFFSET = 251;
@@ -32,22 +33,28 @@ export default function ListarTodos() {
   const [loading, setLoading] = useState(false);
   const [adicionar, setAdicionar] = useState(MIN_OFFSET);
 
-  async function Diminuir() {
+  function Diminuir() {
     setAdicionar((prev) => {
       const novoValor = prev - LIMIT;
       return novoValor < MIN_OFFSET ? MIN_OFFSET : novoValor;
     });
 
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
   }
 
-  async function Somar() {
+  function Somar() {
     setAdicionar((prev) => {
       const novoValor = prev + LIMIT;
       return novoValor > MAX_OFFSET ? MAX_OFFSET : novoValor;
     });
 
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
   }
 
   useEffect(() => {
@@ -87,59 +94,67 @@ export default function ListarTodos() {
   }, [adicionar]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      {/* HEADER */}
-      <View style={{ backgroundColor: colors.background }}>
-        <Header
-          titulo="Hoenn"
-          voltar={<Feather name="arrow-left" size={30} color={colors.text} />}
-        />
-      </View>
+    <View style={[styles.containerScreen, { backgroundColor: colors.background }]}>
+      <Header
+        titulo="Hoenn"
+        voltar={<Feather name="arrow-left" size={30} color={colors.text} />}
+      />
 
       <ScrollView
         ref={scrollRef}
         style={{ backgroundColor: colors.background }}
         contentContainerStyle={{ paddingBottom: 30 }}
+        showsVerticalScrollIndicator={false}
       >
         {/* REGIÕES */}
-        <View
-          style={[
-            styles.Lista,
-            {
-              backgroundColor: colors.card,
-              borderBottomColor: colors.border,
-            },
-          ]}
-        >
-          {[
-            ["Kanto", "rgba(46, 125, 50, 0.50)"],
-            ["Johto", "rgba(166, 124, 0, 0.50)"],
-            ["Hoenn", "rgba(21, 101, 192, 1)"],
-            ["Sinnoh", "rgba(40, 53, 147, 0.50)"],
-            ["Unova", "rgba(66, 66, 66, 0.50)"],
-            ["Kalos", "rgba(173, 20, 87, 0.50)"],
-            ["Alola", "rgba(239, 108, 0, 0.50)"],
-            ["Galar", "rgba(183, 28, 28, 0.50)"],
-            ["Paldea", "rgba(106, 27, 154, 0.50)"],
-          ].map(([regiao, cor]) => (
-            <TouchableOpacity
-              key={regiao}
-              onPress={() => navigator.navigate(regiao as never)}
-            >
-              <Lista regiao={regiao} cor={cor} />
-            </TouchableOpacity>
-          ))}
+        <View style={styles.Lista}>
+          <TouchableOpacity onPress={() => navigator.navigate("Kanto" as never)}>
+            <Lista regiao="Kanto" cor="#2E7D32" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Johto" as never)}>
+            <Lista regiao="Johto" cor="#A67C00" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Hoenn" as never)}>
+            <Lista regiao="Hoenn" cor="#1565C0" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Sinnoh" as never)}>
+            <Lista regiao="Sinnoh" cor="#283593" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Unova" as never)}>
+            <Lista regiao="Unova" cor="#424242" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Kalos" as never)}>
+            <Lista regiao="Kalos" cor="#AD1457" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Alola" as never)}>
+            <Lista regiao="Alola" cor="#EF6C00" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Galar" as never)}>
+            <Lista regiao="Galar" cor="#B71C1C" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigator.navigate("Paldea" as never)}>
+            <Lista regiao="Paldea" cor="#6A1B9A" />
+          </TouchableOpacity>
         </View>
 
-        {/* POKÉMON */}
-        <View style={styles.container}>
+        {/* POKÉMONS */}
+        <View style={styles.containerCards}>
           {loading && (
-            <ActivityIndicator size="large" color={colors.text} />
+            <ActivityIndicator size="large" color={colors.primary} />
           )}
 
           {pokemons.map((pokemon) => (
             <Card
               key={pokemon.id}
+              theme="dark"
               id={pokemon.id}
               nome={
                 pokemon.name.charAt(0).toUpperCase() +
@@ -148,8 +163,10 @@ export default function ListarTodos() {
               numero={`#${pokemon.id.toString().padStart(4, "0")}`}
               imagem={{ uri: pokemon.image }}
               tipo1={
-                pokemon.types[0].charAt(0).toUpperCase() +
-                pokemon.types[0].slice(1)
+                pokemon.types[0]
+                  ? pokemon.types[0].charAt(0).toUpperCase() +
+                    pokemon.types[0].slice(1)
+                  : null
               }
               tipo2={
                 pokemon.types[1]
@@ -166,15 +183,9 @@ export default function ListarTodos() {
           {adicionar > MIN_OFFSET && (
             <TouchableOpacity
               onPress={Diminuir}
-              style={[
-                styles.botaoDiminuir,
-                {
-                  backgroundColor: colors.card,
-                  borderColor: colors.border,
-                },
-              ]}
+              style={styles.botaoDiminuir}
             >
-              <Text style={{ color: colors.text, fontWeight: "bold" }}>
+              <Text style={styles.textoBotao}>
                 ⬅ Mostrar anterior
               </Text>
             </TouchableOpacity>
@@ -183,18 +194,31 @@ export default function ListarTodos() {
           {adicionar < MAX_OFFSET && (
             <TouchableOpacity
               onPress={Somar}
-              style={[
-                styles.botaoSomar,
-                { backgroundColor: colors.accent },
-              ]}
+              style={styles.botaoSomar}
             >
-              <Text style={{ color: "#FFF", fontWeight: "bold" }}>
+              <Text style={styles.textoBotao}>
                 Mostrar mais ➜
               </Text>
             </TouchableOpacity>
           )}
         </View>
       </ScrollView>
+
+      <TouchableOpacity
+        style={[
+          styles.trocaTemaButton,
+          {
+            backgroundColor: isDark ? "#FFFFFF" : "#000000",
+          },
+        ]}
+        onPress={toggleTheme}
+      >
+        <Feather
+          name={isDark ? "sun" : "moon"}
+          size={24}
+          color={isDark ? "#000000" : "#FFFFFF"}
+        />
+      </TouchableOpacity>
     </View>
   );
 }

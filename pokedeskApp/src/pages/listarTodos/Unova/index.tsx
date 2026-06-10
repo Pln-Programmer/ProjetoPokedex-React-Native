@@ -5,23 +5,28 @@ import {
   ActivityIndicator,
   Text,
 } from "react-native";
-import styles from "./style";
+
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState, useRef } from "react";
+import { Feather } from "@expo/vector-icons";
 
 import Header from "../../../assets/components/Header";
-import { Feather } from "@expo/vector-icons";
 import Card from "../../../assets/components/CardListar";
 import Lista from "../../../assets/components/ListaReagioes";
+
+import { useTheme } from "../../../context/ThemeContext";
+import { createStyles } from "./style";
 
 export default function ListarTodos() {
   const navigator = useNavigation();
   const scrollRef = useRef<ScrollView>(null);
 
+  const { colors, isDark, toggleTheme } = useTheme();
+  const styles = createStyles(colors);
+
   const [pokemons, setPokemons] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 UNOVA RANGE
   const MIN = 493;
   const MAX = 649;
 
@@ -85,90 +90,77 @@ export default function ListarTodos() {
   const canGoNext = offset + 30 <= MAX;
 
   return (
-    <>
-      <View style={styles.header}>
-        <Header
-          titulo="Unova"
-          voltar={<Feather name="arrow-left" size={30} color="#FFF" />}
-        />
-      </View>
+    <View style={[styles.containerScreen, { backgroundColor: colors.background }]}>
+      <Header
+        titulo="Unova"
+        voltar={<Feather name="arrow-left" size={30} color={colors.text} />}
+      />
 
       <ScrollView
         ref={scrollRef}
-        style={{ backgroundColor: "#0B1020" }}
+        style={{ backgroundColor: colors.background }}
         contentContainerStyle={{ paddingBottom: 30 }}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.Lista}>
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Kanto" as never)}
-          >
-            <Lista regiao="Kanto" cor="rgba(46, 125, 50, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Kanto" as never)}>
+            <Lista regiao="Kanto" cor="#2E7D32" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Johto" as never)}
-          >
-            <Lista regiao="Johto" cor="rgba(166, 124, 0, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Johto" as never)}>
+            <Lista regiao="Johto" cor="#A67C00" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Hoenn" as never)}
-          >
-            <Lista regiao="Hoenn" cor="rgba(21, 101, 192, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Hoenn" as never)}>
+            <Lista regiao="Hoenn" cor="#1565C0" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Sinnoh" as never)}
-          >
-            <Lista regiao="Sinnoh" cor="rgba(40, 53, 147, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Sinnoh" as never)}>
+            <Lista regiao="Sinnoh" cor="#283593" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Unova" as never)}
-          >
-            <Lista regiao="Unova" cor="rgba(66, 66, 66, 1)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Unova" as never)}>
+            <Lista regiao="Unova" cor="#424242" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Kalos" as never)}
-          >
-            <Lista regiao="Kalos" cor="rgba(173, 20, 87, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Kalos" as never)}>
+            <Lista regiao="Kalos" cor="#AD1457" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Alola" as never)}
-          >
-            <Lista regiao="Alola" cor="rgba(239, 108, 0, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Alola" as never)}>
+            <Lista regiao="Alola" cor="#EF6C00" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Galar" as never)}
-          >
-            <Lista regiao="Galar" cor="rgba(183, 28, 28, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Galar" as never)}>
+            <Lista regiao="Galar" cor="#B71C1C" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigator.navigate("Paldea" as never)}
-          >
-            <Lista regiao="Paldea" cor="rgba(106, 27, 154, 0.50)" />
+          <TouchableOpacity onPress={() => navigator.navigate("Paldea" as never)}>
+            <Lista regiao="Paldea" cor="#6A1B9A" />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.container}>
-          {loading && <ActivityIndicator size="large" color="#000" />}
+        <View style={styles.containerCards}>
+          {loading && (
+            <ActivityIndicator size="large" color={colors.primary} />
+          )}
 
           {pokemons.map((pokemon) => (
             <Card
               key={pokemon.id}
+              theme="dark"
               id={pokemon.id}
               nome={
-                pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+                pokemon.name.charAt(0).toUpperCase() +
+                pokemon.name.slice(1)
               }
               numero={`#${pokemon.id.toString().padStart(4, "0")}`}
               imagem={{ uri: pokemon.image }}
               tipo1={
-                pokemon.types[0].charAt(0).toUpperCase() +
-                pokemon.types[0].slice(1)
+                pokemon.types[0]
+                  ? pokemon.types[0].charAt(0).toUpperCase() +
+                    pokemon.types[0].slice(1)
+                  : null
               }
               tipo2={
                 pokemon.types[1]
@@ -182,18 +174,44 @@ export default function ListarTodos() {
 
         <View style={styles.Botoes}>
           {canGoBack && (
-            <TouchableOpacity onPress={Diminuir} style={styles.botaoDiminuir}>
-              <Text style={styles.textoBotao}>⬅ Mostrar anterior</Text>
+            <TouchableOpacity
+              onPress={Diminuir}
+              style={styles.botaoDiminuir}
+            >
+              <Text style={styles.textoBotao}>
+                ⬅ Mostrar anterior
+              </Text>
             </TouchableOpacity>
           )}
 
           {canGoNext && (
-            <TouchableOpacity onPress={Somar} style={styles.botaoSomar}>
-              <Text style={styles.textoBotao}>Mostrar mais ➜</Text>
+            <TouchableOpacity
+              onPress={Somar}
+              style={styles.botaoSomar}
+            >
+              <Text style={styles.textoBotao}>
+                Mostrar mais ➜
+              </Text>
             </TouchableOpacity>
           )}
         </View>
       </ScrollView>
-    </>
+
+      <TouchableOpacity
+        style={[
+          styles.trocaTemaButton,
+          {
+            backgroundColor: isDark ? "#FFFFFF" : "#000000",
+          },
+        ]}
+        onPress={toggleTheme}
+      >
+        <Feather
+          name={isDark ? "sun" : "moon"}
+          size={24}
+          color={isDark ? "#000000" : "#FFFFFF"}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }

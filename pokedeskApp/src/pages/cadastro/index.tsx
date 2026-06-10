@@ -73,7 +73,7 @@ export default function Cadastro() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
           <Image
-            source={isDark ? PokeVisionLight : PokeVisionDark}
+            source={isDark ? PokeVisionDark : PokeVisionLight}
             style={styles.image}
           />
         </View>
@@ -119,7 +119,10 @@ export default function Cadastro() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+          onPress={() =>
+                  navigator.navigate("Home" as never)
+                }>
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
 
